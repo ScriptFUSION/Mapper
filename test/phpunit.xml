@@ -1,0 +1,12 @@
+<phpunit
+    beStrictAboutOutputDuringTests="true"
+>
+    <testsuite>
+        <directory>.</directory>
+    </testsuite>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>../src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
