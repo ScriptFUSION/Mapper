@@ -1,17 +1,17 @@
 <?php
-namespace ScriptFUSIONTest\Functional\Mapper;
+namespace ScriptFUSIONTest\Integration\Mapper;
 
 use ScriptFUSION\Mapper\AnonymousMapping;
-use ScriptFUSION\Mapper\Mapper;
+use ScriptFUSION\Mapper\CollectionMapper;
 
-final class MapperTest extends \PHPUnit_Framework_TestCase
+final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Mapper */
+    /** @var CollectionMapper */
     private $mapper;
 
     protected function setUp()
     {
-        $this->mapper = new Mapper;
+        $this->mapper = new CollectionMapper;
     }
 
     /**
@@ -19,7 +19,7 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testMapNothing()
     {
-        $mapped = $this->mapper->mapRecords(new \EmptyIterator);
+        $mapped = $this->mapper->mapCollection(new \EmptyIterator);
 
         self::assertFalse($mapped->valid());
     }
@@ -29,7 +29,7 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoMapping()
     {
-        $mapped = $this->mapper->mapRecords(new \ArrayIterator($records = [['foo']]));
+        $mapped = $this->mapper->mapCollection(new \ArrayIterator($records = [['foo']]));
 
         self::assertSame($records, iterator_to_array($mapped));
     }
@@ -39,7 +39,7 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmptyMapping()
     {
-        $mapped = $this->mapper->mapRecords(new \ArrayIterator([['foo']]), new AnonymousMapping($record = []));
+        $mapped = $this->mapper->mapCollection(new \ArrayIterator([['foo']]), new AnonymousMapping($record = []));
 
         self::assertSame([$record], iterator_to_array($mapped));
     }
@@ -47,9 +47,9 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that multiple records are mapped similarly.
      */
-    public function testMapRecords()
+    public function testMapCollection()
     {
-        $mapped = $this->mapper->mapRecords(new \ArrayIterator([[1], [2]]), new AnonymousMapping($record = ['foo']));
+        $mapped = $this->mapper->mapCollection(new \ArrayIterator([[1], [2]]), new AnonymousMapping($record = ['foo']));
 
         self::assertSame([$record, $record], iterator_to_array($mapped));
     }
