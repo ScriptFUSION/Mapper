@@ -12,11 +12,11 @@ class Copy implements Strategy
     /**
      * Initializes this instance with the specified path.
      *
-     * @param string $path Path.
+     * @param array|string $path Path.
      */
     public function __construct($path)
     {
-        $this->path = explode(self::PATH_SEPARATOR, $path);
+        $this->path = is_array($path) ? $path : explode(self::PATH_SEPARATOR, $path);
     }
 
     /**
