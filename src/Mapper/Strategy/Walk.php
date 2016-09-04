@@ -1,9 +1,9 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Mapper\MapperAware;
 use ScriptFUSION\Mapper\MapperAwareTrait;
+use ScriptFUSION\Mapper\Mapping;
 
 class Walk extends Copy implements MapperAware
 {

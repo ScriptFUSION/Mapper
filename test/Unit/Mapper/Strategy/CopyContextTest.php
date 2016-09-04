@@ -11,4 +11,11 @@ final class CopyContextTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('foo', $copyContext(null, 'foo'));
     }
+
+    public function testPath()
+    {
+        $copyContext = new CopyContext('foo->bar');
+
+        self::assertSame('baz', $copyContext(null, ['foo' => ['bar' => 'baz']]));
+    }
 }

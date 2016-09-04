@@ -1,5 +1,6 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
+
 use ScriptFUSION\Mapper\Mapping;
 
 /**

@@ -6,7 +6,7 @@ use Eloquent\Enumeration\AbstractEnumeration;
 /**
  * Specifies a PHP data type.
  */
-class DataType extends AbstractEnumeration
+final class DataType extends AbstractEnumeration
 {
     const BOOLEAN = 'boolean';
     const INTEGER = 'integer';

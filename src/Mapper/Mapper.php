@@ -78,8 +78,6 @@ class Mapper
     }
 
     /**
-     * TODO: Move to dedicated class.
-     *
      * @param object $object
      */
     protected function injectDependencies($object)
