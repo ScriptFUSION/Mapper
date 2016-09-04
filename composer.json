@@ -13,6 +13,7 @@
     "eloquent/enumeration": "^5"
   },
   "require-dev": {
+    "scriptfusion/static-class": "^1",
     "phpunit/phpunit": "^4",
     "mockery/mockery": "^0"
   },

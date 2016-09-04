@@ -3,10 +3,11 @@ namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\Strategy\ToList;
+use ScriptFUSIONTest\MockFactory;
 
 final class ToListTest extends \PHPUnit_Framework_TestCase
 {
-    use MockeryPHPUnitIntegration, MockMapper;
+    use MockeryPHPUnitIntegration;
 
     /** @var ToList */
     private $toList;
@@ -18,7 +19,7 @@ final class ToListTest extends \PHPUnit_Framework_TestCase
 
     public function testMap()
     {
-        $this->toList->setMapper($this->mockMapper(
+        $this->toList->setMapper(MockFactory::mockMapper(
             $map = [
                 'foo' => 'bar',
             ]
@@ -29,7 +30,7 @@ final class ToListTest extends \PHPUnit_Framework_TestCase
 
     public function testList()
     {
-        $this->toList->setMapper($this->mockMapper(
+        $this->toList->setMapper(MockFactory::mockMapper(
             $map = [
                 'foo',
                 'bar',
@@ -41,7 +42,7 @@ final class ToListTest extends \PHPUnit_Framework_TestCase
 
     public function testScalar()
     {
-        $this->toList->setMapper($this->mockMapper('foo'));
+        $this->toList->setMapper(MockFactory::mockMapper('foo'));
 
         $this->toList(['foo']);
     }

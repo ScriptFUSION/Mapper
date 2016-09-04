@@ -3,15 +3,16 @@ namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\Strategy\Filter;
+use ScriptFUSIONTest\MockFactory;
 
 final class FilterTest extends \PHPUnit_Framework_TestCase
 {
-    use MockeryPHPUnitIntegration, MockMapper;
+    use MockeryPHPUnitIntegration;
 
     public function testDefaultCallback()
     {
         $filter = new Filter(null);
-        $filter->setMapper($this->mockMapper([null, 0, "0", null]));
+        $filter->setMapper(MockFactory::mockMapper([null, 0, "0", null]));
 
         self::assertEquals([0, "0"], array_values($filter([])));
     }
@@ -22,7 +23,7 @@ final class FilterTest extends \PHPUnit_Framework_TestCase
             return $value['foo'] === 'bar';
         });
 
-        $filter->setMapper($this->mockMapper([
+        $filter->setMapper(MockFactory::mockMapper([
             [
                 'foo' => 'bar',
             ],
@@ -38,10 +39,10 @@ final class FilterTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new Filter(null);
 
-        $filter->setMapper($this->mockMapper(null));
+        $filter->setMapper(MockFactory::mockMapper(null));
         self::assertNull($filter([]));
 
-        $filter->setMapper($this->mockMapper((object)['foo' => 'bar']));
+        $filter->setMapper(MockFactory::mockMapper((object)['foo' => 'bar']));
         self::assertNull($filter([]));
     }
 }

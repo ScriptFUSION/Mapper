@@ -18,11 +18,13 @@ class Type extends Decorator
     {
         $data = parent::__invoke($data, $context);
 
-        if (settype($data, "$this->type")) {
-            return $data;
-        }
+        /**
+         * settype() only returns false when the type specifier is invalid or
+         * "resource". Since the enumeration guarantees valid type specifiers
+         * this function call never returns false, so we do not check it.
+         */
+        settype($data, "$this->type");
 
-        $type = gettype($data);
-        throw new \RuntimeException("Could not convert \"$type\" to \"$this->type\".");
+        return $data;
     }
 }

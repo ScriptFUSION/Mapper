@@ -1,16 +1,19 @@
 <?php
-namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
+namespace ScriptFUSIONTest;
 
 use ScriptFUSION\Mapper\Mapper;
+use ScriptFUSION\StaticClass;
 
-trait MockMapper
+final class MockFactory
 {
+    use StaticClass;
+
     /**
      * @param mixed $data
      *
      * @return Mapper
      */
-    private function mockMapper($data)
+    public static function mockMapper($data)
     {
         return \Mockery::mock(Mapper::class)->shouldReceive('map')->andReturn($data)->getMock();
     }
