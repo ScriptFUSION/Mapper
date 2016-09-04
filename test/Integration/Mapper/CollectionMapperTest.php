@@ -15,7 +15,7 @@ final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests that when there is nothing to mapMapping an invalid Generator is returned.
+     * Tests that when there is nothing to map an invalid Generator is returned.
      */
     public function testMapNothing()
     {
