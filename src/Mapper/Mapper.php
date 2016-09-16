@@ -15,7 +15,7 @@ class Mapper
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws InvalidMapperTypeException An invalid strategy or mapping object was specified.
      */
     public function map(array $record, $strategyOrMapping, $context = null)
     {
@@ -28,10 +28,12 @@ class Mapper
         } /* Mapping fragment. */
         elseif (is_array($strategyOrMapping)) {
             return $this->mapFragment($record, $strategyOrMapping, $context);
+        } /* Scalar values. */
+        elseif (is_scalar($strategyOrMapping)) {
+            return $strategyOrMapping;
         }
 
-        // Pass unidentified object through.
-        return $strategyOrMapping;
+        throw new InvalidMapperTypeException('Invalid strategy or mapping: "' . get_class($strategyOrMapping) . '".');
     }
 
     /**
