@@ -11,7 +11,7 @@ abstract class Mapping extends \ArrayObject
      */
     public function __construct()
     {
-        parent::__construct($this->createMap());
+        parent::__construct($this->createMapping());
     }
 
     /**
@@ -19,5 +19,5 @@ abstract class Mapping extends \ArrayObject
      *
      * @return array Mapping.
      */
-    abstract protected function createMap();
+    abstract protected function createMapping();
 }

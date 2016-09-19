@@ -12,7 +12,7 @@ final class AnonymousMapping extends Mapping
         parent::__construct();
     }
 
-    protected function createMap()
+    protected function createMapping()
     {
         return $this->definition;
     }
