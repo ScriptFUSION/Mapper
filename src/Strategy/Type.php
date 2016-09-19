@@ -1,7 +1,7 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\DataType;
+use ScriptFUSION\Mapper\DataType;
 
 class Type extends Decorator
 {

@@ -1,5 +1,5 @@
 <?php
-namespace ScriptFUSION;
+namespace ScriptFUSION\Mapper;
 
 use Eloquent\Enumeration\AbstractEnumeration;
 

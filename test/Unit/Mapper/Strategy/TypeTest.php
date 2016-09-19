@@ -2,7 +2,7 @@
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use ScriptFUSION\DataType;
+use ScriptFUSION\Mapper\DataType;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 use ScriptFUSION\Mapper\Strategy\Type;
 use ScriptFUSIONTest\MockFactory;
