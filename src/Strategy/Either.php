@@ -1,15 +1,24 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+use ScriptFUSION\Mapper\Mapping;
+
+/**
+ * Either uses the primary strategy, if it returns non-null, otherwise delegates to a fallback expression.
+ */
 class Either extends Decorator
 {
-    private $strategyOrMapping;
+    private $expression;
 
-    public function __construct(Strategy $strategy, $strategyOrMapping)
+    /**
+     * @param Strategy $strategy
+     * @param Strategy|Mapping|array|mixed $expression
+     */
+    public function __construct(Strategy $strategy, $expression)
     {
         parent::__construct($strategy);
 
-        $this->strategyOrMapping = $strategyOrMapping;
+        $this->expression = $expression;
     }
 
     public function __invoke($data, $context = null)
@@ -18,6 +27,6 @@ class Either extends Decorator
             return $result;
         }
 
-        return $this->delegate($this->strategyOrMapping, $data, $context);
+        return $this->delegate($this->expression, $data, $context);
     }
 }

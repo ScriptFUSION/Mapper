@@ -1,6 +1,6 @@
 {
   "name": "scriptfusion/mapper",
-  "description": "Maps data from one format to another using an object composition DSL.",
+  "description": "Transforms arrays using an object composition DSL.",
   "authors": [
     {
       "name": "Bilge",

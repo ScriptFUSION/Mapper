@@ -1,6 +1,9 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+/**
+ * Moves all nested values to the top level.
+ */
 class Flatten extends Delegate
 {
     private $ignoreKeys = false;

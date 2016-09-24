@@ -10,30 +10,30 @@ class Mapper
 {
     /**
      * @param array $record
-     * @param Strategy|Mapping|array|mixed $strategyOrMapping
+     * @param Strategy|Mapping|array|mixed $expression
      * @param mixed $context
      *
      * @return mixed
      *
-     * @throws InvalidMapperTypeException An invalid strategy or mapping object was specified.
+     * @throws InvalidExpressionException An invalid strategy or mapping object was specified.
      */
-    public function map(array $record, $strategyOrMapping, $context = null)
+    public function map(array $record, $expression, $context = null)
     {
         /* Strategy. */
-        if ($strategyOrMapping instanceof Strategy) {
-            return $this->mapStrategy($record, $strategyOrMapping, $context);
+        if ($expression instanceof Strategy) {
+            return $this->mapStrategy($record, $expression, $context);
         } /* Mapping. */
-        elseif ($strategyOrMapping instanceof Mapping) {
-            return $this->mapMapping($record, $strategyOrMapping, $context);
+        elseif ($expression instanceof Mapping) {
+            return $this->mapMapping($record, $expression, $context);
         } /* Mapping fragment. */
-        elseif (is_array($strategyOrMapping)) {
-            return $this->mapFragment($record, $strategyOrMapping, $context);
+        elseif (is_array($expression)) {
+            return $this->mapFragment($record, $expression, $context);
         } /* Scalar values. */
-        elseif (is_scalar($strategyOrMapping)) {
-            return $strategyOrMapping;
+        elseif (is_scalar($expression)) {
+            return $expression;
         }
 
-        throw new InvalidMapperTypeException('Invalid strategy or mapping: "' . get_class($strategyOrMapping) . '".');
+        throw new InvalidExpressionException('Invalid strategy or mapping: "' . get_class($expression) . '".');
     }
 
     /**

@@ -1,6 +1,9 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+/**
+ * Creates a collection of unique values by removing duplicates.
+ */
 class Unique extends Delegate
 {
     public function __invoke($data, $context = null)

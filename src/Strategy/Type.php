@@ -3,10 +3,17 @@ namespace ScriptFUSION\Mapper\Strategy;
 
 use ScriptFUSION\Mapper\DataType;
 
+/**
+ * Casts data to the specified type.
+ */
 class Type extends Decorator
 {
     private $type;
 
+    /**
+     * @param DataType $type Type to cast to.
+     * @param Strategy $strategy Strategy.
+     */
     public function __construct(DataType $type, Strategy $strategy)
     {
         parent::__construct($strategy);

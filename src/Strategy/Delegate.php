@@ -9,19 +9,19 @@ abstract class Delegate implements Strategy, MapperAware
 {
     use MapperAwareTrait;
 
-    private $strategyOrMapping;
+    private $expression;
 
     /**
-     * @param Strategy|Mapping|array|mixed $strategyOrMapping
+     * @param Strategy|Mapping|array|mixed $expression
      */
-    public function __construct($strategyOrMapping)
+    public function __construct($expression)
     {
-        $this->strategyOrMapping = $strategyOrMapping;
+        $this->expression = $expression;
     }
 
     public function __invoke($data, $context = null)
     {
-        return $this->delegate($this->strategyOrMapping, $data, $context);
+        return $this->delegate($this->expression, $data, $context);
     }
 
     protected function delegate($strategy, $data, $context)

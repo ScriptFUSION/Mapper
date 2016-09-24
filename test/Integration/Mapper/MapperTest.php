@@ -3,7 +3,7 @@ namespace ScriptFUSIONTest\Integration\Mapper;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\AnonymousMapping;
-use ScriptFUSION\Mapper\InvalidMapperTypeException;
+use ScriptFUSION\Mapper\InvalidExpressionException;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\MapperAware;
 use ScriptFUSION\Mapper\Strategy\Copy;
@@ -68,7 +68,7 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
 
     public function testMapInvalidObject()
     {
-        $this->setExpectedException(InvalidMapperTypeException::class);
+        $this->setExpectedException(InvalidExpressionException::class);
 
         $this->mapper->map([], (object)[]);
     }

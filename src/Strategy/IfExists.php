@@ -4,7 +4,7 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Decorates a strategy or mapping when a condition is non-null.
+ * Delegates to one expression or another depending on whether the specified condition maps to null.
  */
 class IfExists extends Decorator
 {
@@ -21,8 +21,8 @@ class IfExists extends Decorator
      * condition is null.
      *
      * @param Strategy $condition Condition.
-     * @param Strategy|Mapping|array|mixed $if Strategy or mapping.
-     * @param Strategy|Mapping|array|mixed $else Optional. Strategy or mapping.
+     * @param Strategy|Mapping|array|mixed $if Primary expression.
+     * @param Strategy|Mapping|array|mixed|null $else Optional. Fallback expression.
      */
     public function __construct(Strategy $condition, $if, $else = null)
     {

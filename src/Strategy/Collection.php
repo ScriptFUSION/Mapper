@@ -4,20 +4,19 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Decorates a data collection by applying a transformation to each datum.
+ * Decorates a collection of data by applying a transformation to each datum using a callback.
  */
 class Collection extends Delegate
 {
     private $transformation;
 
     /**
-     * Initializes this instance with the specified strategy or mapping that
-     * yields a data collection and the specified strategy or mapping that
-     * describes how to transform each datum in the collection.
+     * Initializes this instance with the specified strategy or mapping that yields a data collection and the specified
+     * strategy or mapping that describes how to transform each datum in the collection.
      *
-     * @param Strategy|Mapping|array|mixed $collection Data collection.
-     * @param Strategy|Mapping|array|mixed $transformation Transformation
-     *     strategy or mapping fragment.
+     * @param Strategy|Mapping|array|mixed $collection Data collection expression that maps to an array
+     * @param Strategy|Mapping|array|mixed $transformation Transformation expression.
+     *     The current datum is passed as context.
      */
     public function __construct($collection, $transformation)
     {

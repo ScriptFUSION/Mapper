@@ -1,6 +1,9 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+/**
+ * Augments data using the return value of the specified callback.
+ */
 class Callback implements Strategy
 {
     private $callback;
