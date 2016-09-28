@@ -1,11 +1,16 @@
 <?php
 namespace ScriptFUSION\Mapper;
 
+use ScriptFUSION\Mapper\Strategy\Strategy;
+
 final class AnonymousMapping extends Mapping
 {
     private $definition;
 
-    public function __construct(array $definition)
+    /**
+     * @param array|Strategy $definition
+     */
+    public function __construct($definition)
     {
         $this->definition = $definition;
 

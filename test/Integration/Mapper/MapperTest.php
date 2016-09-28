@@ -66,6 +66,13 @@ final class MapperTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testMapNull()
+    {
+        $mapped = $this->mapper->map([], $output = ['foo' => null]);
+
+        self::assertSame($output, $mapped);
+    }
+
     public function testMapInvalidObject()
     {
         $this->setExpectedException(InvalidExpressionException::class);

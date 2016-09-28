@@ -16,7 +16,8 @@ This supposes we already created a mapping, `MyMapping`, to convert the data.
 
 Mappings
 --------
-Mappings are data transformation descriptions that describe how to convert data from one format to another. Mapping classes are an object wrapper for an array that describes the output format with instructions (hereafter known as *strategies*) that fetch or augment input data. To write a mapping we must know the input data format so we can then write an array that represents the desired output format and decorate it with strategies.
+
+Mappings are data transformation descriptions that describe how to convert data from one format to another. Mappings are an object wrapper for an array that describes the output format with instructions (hereafter known as *strategies*) that fetch or augment input data. To write a mapping we must know the input data format so we can then write an array that represents the desired output format and decorate it with strategies.
 
 ### Example
 
@@ -50,8 +51,9 @@ An expression is a pseudo-type representing the list of valid mapping value type
  2. `Mapping`
  3. Mapping fragment
  4. Scalar
+ 5. `null`
 
-[Strategies](#strategies) are invoked and substituted as described in the following section. Mappings may contain any number of additional embedded mappings or mapping fragments&mdash;a mapping fragment is just a mapping described by an array instead of a `Mapping` object. Scalar values (*integer*, *float*, *string* and *boolean*) have no special meaning and are presented verbatim in the output.
+[Strategies](#strategies) are invoked and substituted as described in the following section. Mappings may contain any number of additional embedded mappings or mapping fragments&mdash;a mapping fragment is just a mapping described by an array instead of a `Mapping` object. Scalar values (*integer*, *float*, *string* and *boolean*) and `null` have no special meaning and are presented verbatim in the output.
 
 ### Writing a mapping
 
@@ -68,9 +70,14 @@ Strategies are invokable classes that are invoked by Mapper and substituted for 
 
 Strategies are basic building blocks from which complex data manipulation chains can be constructed to meet the bespoke requirements of an application. The composition of strategies forms a powerful object composition DSL that allows us to express how to retrieve and augment data to mould it into the desired format.
 
-### Core strategies
+For a complete list of strategies please see the [strategy reference](#strategy-reference).
 
-Core strategies are those that ship with Mapper and provide a suite of commonly used features, as listed below.
+Strategy reference
+------------------
+
+The following strategies ship with Mapper and provide a suite of commonly used features, as listed below.
+
+### Strategy index
 
 #### Fetchers
 
@@ -80,7 +87,7 @@ Core strategies are those that ship with Mapper and provide a suite of commonly 
 #### Augmenters
 
  - [Callback](#callback) &ndash; Augments data using the specified callback.
- - [Collection](#collection) &ndash; Decorates a collection of data by applying a transformation to each datum.
+ - [Collection](#collection) &ndash; Maps a collection of data by applying a transformation to each datum.
  - [Context](#context) &ndash; Replaces the context for the specified expression.
  - [Either](#either) &ndash; Either uses the primary strategy, if it returns non-null, otherwise delegates to a fallback expression.
  - [Filter](#filter) &ndash; Filters null values or values rejected by the specified callback.
@@ -189,7 +196,7 @@ Callback(callable $callback)
 
 ### Collection
 
-Decorates a collection of data by applying a transformation to each datum using a callback. The data collection must be an expression that maps to an array otherwise null is returned.
+Maps a collection of data by applying a transformation to each datum using a callback. The data collection must be an expression that maps to an array otherwise null is returned.
 
 #### Signature
 
@@ -523,7 +530,7 @@ Walk(Strategy|Mapping|array|mixed $expression, array|string $path)
 
 Strategies must implement the `Strategy` interface but it is common to extend `Delegate` or `Decorator` because we usually write augmenters which expect another strategy injected into them to provide data. `Delegate` and `Decorator` provide the `delegate()` method, which allows a strategy to evaluate an expression using Mapper, and is usually needed to evaluate the injected strategy. `Delegate` can delegate any expression to Mapper whereas `Decorator` only accepts `Strategy` objects.
 
-It is recommended to name custom strategies with a *Strategy* suffix to help distinguish them from core strategies.
+It is recommended to name custom strategies with a *Strategy* suffix to help distinguish them from stock strategies.
 
 Requirements
 ------------
@@ -536,6 +543,13 @@ Testing
 
 Mapper is fully unit tested. Run the tests with `bin/test` from a shell. All examples
 in this document can be found in `DocumentationTest`.
+
+Limitations
+-----------
+
+ - Strategies do not know the name of the key they are assigned to because `Mapper` does not forward the key name.
+ - Strategies do not know where they sit in a `Mapping` and therefore cannot traverse a mapping relative to their position.
+ - The `Collection` strategy overwrites context making any previous context inaccessible to descendants.
 
 
   [Releases]: https://github.com/ScriptFUSION/Mapper/releases

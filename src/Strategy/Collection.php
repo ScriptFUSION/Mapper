@@ -4,7 +4,7 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Decorates a collection of data by applying a transformation to each datum using a callback.
+ * Maps a collection of data by applying a transformation to each datum using a callback.
  */
 class Collection extends Delegate
 {

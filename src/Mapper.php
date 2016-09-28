@@ -4,7 +4,7 @@ namespace ScriptFUSION\Mapper;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 
 /**
- * Maps records according to strategies, mappings and mapping fragments.
+ * Maps records according to expression value types.
  */
 class Mapper
 {
@@ -28,8 +28,8 @@ class Mapper
         } /* Mapping fragment. */
         elseif (is_array($expression)) {
             return $this->mapFragment($record, $expression, $context);
-        } /* Scalar values. */
-        elseif (is_scalar($expression)) {
+        } /* Null or scalar values. */
+        elseif (null === $expression || is_scalar($expression)) {
             return $expression;
         }
 
@@ -47,7 +47,14 @@ class Mapper
      */
     protected function mapMapping(array $record, Mapping $mapping, $context = null)
     {
-        return $this->mapFragment($record, $mapping->getArrayCopy(), $context);
+        $mapped = $this->mapFragment($record, $mapping->toArray(), $context);
+
+        if ($mapping->isWrapped()) {
+            // Unwrap.
+            return $mapped[0];
+        }
+
+        return $mapped;
     }
 
     protected function mapFragment(array $record, array $fragment, $context = null)
@@ -62,7 +69,7 @@ class Mapper
             return $fragment;
         }
 
-        throw new \Exception; // TODO: Proper exception.
+        throw new \Exception; // TODO: Determine whether this statement is reachable.
     }
 
     /**
