@@ -12,12 +12,12 @@ Mapper transforms arrays from one format to another using an object composition 
 $mappedData = (new Mapper)->map($data, new MyMapping);
 ```
 
-This supposes we already created a mapping, `MyMapping`, to convert the data.
+This supposes we already created a mapping, `MyMapping`, to convert `$data` into `$mappedData`.
 
 Mappings
 --------
 
-Mappings are data transformation descriptions that describe how to convert data from one format to another. Mappings are an object wrapper for an array that describes the output format with instructions (hereafter known as *strategies*) that fetch or augment input data. To write a mapping we must know the input data format so we can then write an array that represents the desired output format and decorate it with strategies.
+Mappings are data transformation descriptions that describe how to convert data from one format to another. Mappings are an object wrapper for an array, which describes the output format, with [expressions](#expressions) that can fetch and augment input data. To write a mapping we must know the input data format so we can write an array that represents the desired output format and decorate it with expressions to transform the input data.
 
 ### Example
 
@@ -41,7 +41,7 @@ $barData = (new Mapper)->map($fooData, new FooToBarMapping);
 
 In this example we declare a mapping, `FooToBarMapping`, and pass it to the `Mapper::map` method to transform `$fooData` into `$barData`.
 
-This mapping introduces the `Copy` strategy that copies a value from the input data to the output. Strategies are just one type of *expression* we can specify in a mapping.
+This mapping introduces the `Copy` strategy that copies a value from the input data to the output. Strategies are just one type of *expression* we can specify as mapping values.
 
 ### Expressions
 
@@ -57,11 +57,36 @@ An expression is a pseudo-type representing the list of valid mapping value type
 
 ### Writing a mapping
 
-To write a mapping create a new class that extends `Mapping` and implement its abstract method, `createMapping()`, that returns an array describing the output format with any combination of valid [expressions](#expressions).
+To write a mapping create a new class that extends `Mapping` and implement its abstract method, `createMapping()`, that returns a strategy or an array describing the output format with any combination of [expressions](#expressions).
 
 For prototyping purposes we can avoid writing a new mapping class and instead create an `AnonymousMapping`, passing the mapping definition to its constructor, which can be quicker than writing a new class. However, the recommended way to write mappings is to write new classes so mappings have meaningful names to identify them.
 
 It is recommended to name mapping classes *XToYMapping* where *X* is the name of the input format and *Y* is the name of the output format.
+
+### Strategy-based mappings
+
+*Strategy-based* mappings are created by specifying a strategy at the top level. Usually mappings are *array-based*, and although such mappings may contain other expressions, including strategies, at the top level they are an array.
+
+Some problems can only be solved with strategy-based mappings. For example, suppose we want to create a mapping that combines two other mappings at the top level. With array-based mappings the best we can do is something like the following.
+
+```php
+protected function createMapping()
+{
+    return [
+       'foo' => new FooMapping,
+       'bar' => new BarMapping,
+    ]
+}
+```
+
+This composes `FooMapping` and `BarMapping` in our mapping but each mapping will be mapped under new `foo` and `bar` keys respectively. What we really want is to combine the keys of each mapping together at the top level of our mapping but there is no way to express a solution to this problem with array-based mappings. If we use the [`Merge`](#merge) strategy as the basis of our mapping we can solve this problem.
+
+```php
+protected function createMapping()
+{
+    return new Merge(new FooMapping, new BarMapping);
+}
+```
 
 Strategies
 ----------
@@ -71,6 +96,151 @@ Strategies are invokable classes that are invoked by Mapper and substituted for 
 Strategies are basic building blocks from which complex data manipulation chains can be constructed to meet the bespoke requirements of an application. The composition of strategies forms a powerful object composition DSL that allows us to express how to retrieve and augment data to mould it into the desired format.
 
 For a complete list of strategies please see the [strategy reference](#strategy-reference).
+
+### Writing strategies
+
+Strategies must implement the `Strategy` interface but it is common to extend `Delegate` or `Decorator` because we usually write augmenters which expect another strategy injected into them to provide data. `Delegate` and `Decorator` provide the `delegate()` method, which allows a strategy to evaluate an expression using Mapper, and is usually needed to evaluate the injected strategy. `Delegate` can delegate any expression to Mapper whereas `Decorator` only accepts `Strategy` objects.
+
+It is recommended to name custom strategies with a *Strategy* suffix to help distinguish them from stock strategies.
+
+## Practical example
+
+Suppose we receive two different address formats from two different third-party providers. The first provider, FooBook, provides a single UK addresses. The second provider, BarBucket, provides a collection of US addresses. We are tasked with converting both types to the same uniform address format for our application using mappings. Sample data from each provider is shown below.
+
+The address format for our application must be a flat array with the following fields.
+
+* line1
+* line2 (if applicable)
+* city
+* postcode
+* country
+
+### FooBook
+
+A sample of the data we receive from FooBook is shown below.
+
+```php
+$fooBookAddress = [
+    'address' => [
+        'name' => 'Mr A Smith',
+        'address_line1' => '3 High Street',
+        'address_line2' => 'Hedge End',
+        'city' => 'SOUTHAMPTON',
+        'post_code' => 'SO31 4NG',
+    ],
+    'country' => 'UK',
+];
+```
+
+Before continuing, consider attempting to create the mapping on your own, consulting the [reference](#strategy-reference) if unsure which strategies to use. The following code shows how we can create a mapping to convert this address format to our application's format.
+
+```php
+class FooBookAddressToAddresesMapping extends Mapping
+{
+    protected function createMapping()
+    {
+        return [
+            'line1' => new Copy('address->address_line1'),
+            'line2' => new Copy('address->address_line2'),
+            'city' => new Copy('address->city'),
+            'postcode' => new Copy('address->post_code'),
+            'country' => new Copy('country'),
+        ];
+    }
+}
+```
+
+Since the input data already has the values we want we only need to effectively rename the fields using `Copy` strategies. We do not need the name field so it is left unmapped.
+
+The result of mapping the input data is shown below.
+
+```php
+$address = (new Mapper)->map($fooBookAddress, new FooBookAddressToAddresesMapping);
+
+// Output.
+[  
+    'line1' => '3 High Street',
+    'line2' => 'Hedge End',
+    'city' => 'SOUTHAMPTON',
+    'postcode' => 'SO31 4NG',
+    'country' => 'UK',
+]
+```
+
+### BarBucket
+
+A sample of the data we receive from BarBucket is show below.
+
+```php
+$barBucketAddress = [
+    'Addresses' => [
+        [
+            'Jeremy Martinson, Jr.',
+            '455 Larkspur Dr.',
+            'Baviera, CA 92908',
+        ],
+    ],
+];
+```
+
+This format is a lot less similar to our application's format. In particular, BarBucket's format supports multiple addresses but we're only interested in mapping one so we'll assume the first will suffice and discard any others. Their format also omits the country but we know BarBucket only supplies US addresses so we can assume the country is always "US". Once again, consider attempting to create the mapping on your own before observing the solution below.
+
+```php
+class BarBucketAddressToAddresesMapping extends Mapping
+{
+    protected function createMapping()
+    {
+        return [
+            'line1' => new Copy('Addresses->0->1'),
+            'city' => new Callback(
+                function (array $data) {
+                    return $this->extractCity($data['Addresses'][0][2]);
+                }
+            ),
+            'postcode' => new Callback(
+                function (array $data) {
+                    return $this->extractZipCode($data['Addresses'][0][2]);
+                }
+            ),
+            'country' => 'US',
+        ];
+    }
+
+    private function extractCity($line)
+    {
+        return explode(',', $line, 2)[0];
+    }
+
+    private function extractZipCode($line)
+    {
+        if (preg_match('[.*\b(\d{5})]', $line, $matches)) {
+            return $matches[1];
+        }
+    }
+}
+```
+
+*Line1* can be copied straight from the input data and *country* can be hard-coded with a constant value because we assume it does not change.
+
+City and postcode must be extracted from the last line of the address. For this we use `Callback` strategies that indirectly point to private methods of our mapping. Callbacks are only necessary because there are currently no included strategies to perform string splitting or regular expression matching.
+
+The anonymous function wrapper picks the relevant part of the input data to pass to our methods. The weakness of this solution is dereferencing non-existent values will cause PHP to generate *undefined index* notices whereas injecting `Copy` strategies would gracefully resolve to `null` if any part of the path does not exist. Therefore, the most elegant solution would be to create custom strategies to promote code reuse and avoid errors, but is beyond the scope of this demonstration. For more information see [writing strategies](#writing-strategies).
+
+The result of mapping the input data is shown below.
+
+```php
+$address = (new Mapper)->map($barBucketAddress, new BarBucketAddressToAddresesMapping);
+
+// Output.
+[
+    'line1' => '455 Larkspur Dr.',
+    'city' => 'Baviera',
+    'postcode' => '92908',
+    'country' => 'US',
+],
+```
+
+Note that *line2* is not included in our output because it is was declared optional in the requirements. If it was required we could simply add `'line2' => null,` to our mapping, to hard-code its value to `null`, since it is never present in the input data from this provider.
 
 Strategy reference
 ------------------
@@ -525,12 +695,6 @@ Walk(Strategy|Mapping|array|mixed $expression, array|string $path)
 ```
 
 > 123
-
-### Writing strategies
-
-Strategies must implement the `Strategy` interface but it is common to extend `Delegate` or `Decorator` because we usually write augmenters which expect another strategy injected into them to provide data. `Delegate` and `Decorator` provide the `delegate()` method, which allows a strategy to evaluate an expression using Mapper, and is usually needed to evaluate the injected strategy. `Delegate` can delegate any expression to Mapper whereas `Decorator` only accepts `Strategy` objects.
-
-It is recommended to name custom strategies with a *Strategy* suffix to help distinguish them from stock strategies.
 
 Requirements
 ------------

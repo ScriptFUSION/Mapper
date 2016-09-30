@@ -18,6 +18,8 @@ use ScriptFUSION\Mapper\Strategy\ToList;
 use ScriptFUSION\Mapper\Strategy\Type;
 use ScriptFUSION\Mapper\Strategy\Unique;
 use ScriptFUSION\Mapper\Strategy\Walk;
+use ScriptFUSIONTest\Fixture\BarBucketAddressToAddresesMapping;
+use ScriptFUSIONTest\Fixture\FooBookAddressToAddresesMapping;
 use ScriptFUSIONTest\Fixture\FooToBarMapping;
 
 final class DocumentationTest extends \PHPUnit_Framework_TestCase
@@ -28,6 +30,56 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         $barData = (new Mapper)->map($fooData, new FooToBarMapping);
 
         self::assertSame(['bar' => 123], $barData);
+    }
+
+    public function testFooBookAddressToAddresesMapping()
+    {
+        self::assertSame(
+            [
+                'line1' => $line1 = '3 High Street',
+                'line2' => $line2 = 'Hedge End',
+                'city' => $city = 'SOUTHAMPTON',
+                'postcode' => $postcode = 'SO31 4NG',
+                'country' => $country = 'UK',
+            ],
+            (new Mapper)->map(
+                [
+                    'address' => [
+                        'name' => 'Mr A Smith',
+                        'address_line1' => $line1,
+                        'address_line2' => $line2,
+                        'city' => $city,
+                        'post_code' => $postcode,
+                    ],
+                    'country' => $country,
+                ],
+                new FooBookAddressToAddresesMapping
+            )
+        );
+    }
+
+    public function testBarBucketAddressToAddresesMapping()
+    {
+        self::assertSame(
+            [
+                'line1' => $line1 = '455 Larkspur Dr.',
+                'city' => $city = 'Baviera',
+                'postcode' => $postcode = '92908',
+                'country' => 'US',
+            ],
+            (new Mapper)->map(
+                [
+                    'Addresses' => [
+                        [
+                            'Jeremy Martinson, Jr.',
+                            $line1,
+                            "$city, CA $postcode",
+                        ],
+                    ],
+                ],
+                new BarBucketAddressToAddresesMapping
+            )
+        );
     }
 
     public function testCopy()
