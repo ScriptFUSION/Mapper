@@ -6,7 +6,7 @@ Mapper
 [![Test coverage][Coverage image]][Coverage]
 [![Code style][Style image]][Style]
 
-Mapper transforms arrays from one format to another using an object composition DSL. An application often receives data from a foreign source structured differently than it wants. We can use Mapper to transform data into a more suitable format by using a `Mapping` as shown in the following example.
+Mapper transforms arrays from one format to another using an object composition DSL. An application often receives data from a foreign source structured differently than it wants. We can use Mapper to transform foreign data into a more suitable format for our application using a `Mapping` as shown in the following example.
 
 ```php
 $mappedData = (new Mapper)->map($data, new MyMapping);
@@ -39,7 +39,7 @@ $barData = (new Mapper)->map($fooData, new FooToBarMapping);
 
 > ['bar' => 123]
 
-In this example we declare a mapping, `FooToBarMapping`, and pass it to the `Mapper::map` method to transform `$fooData` into `$barData`.
+In this example we declare a mapping, `FooToBarMapping`, and pass it to the `Mapper::map` method to transform `$fooData` into `$barData`. As mentioned, this is just a contrived example to demonstrate how Mapper works; one may like to see a more [practical example](#practical-example).
 
 This mapping introduces the `Copy` strategy that copies a value from the input data to the output. Strategies are just one type of *expression* we can specify as mapping values.
 
@@ -105,7 +105,7 @@ It is recommended to name custom strategies with a *Strategy* suffix to help dis
 
 ## Practical example
 
-Suppose we receive two different address formats from two different third-party providers. The first provider, FooBook, provides a single UK addresses. The second provider, BarBucket, provides a collection of US addresses. We are tasked with converting both types to the same uniform address format for our application using mappings. Sample data from each provider is shown below.
+Suppose we receive two different postal address formats from two different third-party providers. The first provider, FooBook, provides a single UK addresses. The second provider, BarBucket, provides a collection of US addresses. We are tasked with converting both types to the same uniform address format for our application using mappings.
 
 The address format for our application must be a flat array with the following fields.
 
@@ -115,7 +115,7 @@ The address format for our application must be a flat array with the following f
 * postcode
 * country
 
-### FooBook
+### FooBook address mapping
 
 A sample of the data we receive from FooBook is shown below.
 
@@ -167,7 +167,7 @@ $address = (new Mapper)->map($fooBookAddress, new FooBookAddressToAddresesMappin
 ]
 ```
 
-### BarBucket
+### BarBucket address mapping
 
 A sample of the data we receive from BarBucket is show below.
 
@@ -702,18 +702,18 @@ Requirements
  - [PHP 5.5](http://php.net/)
  - [Composer](https://getcomposer.org/)
 
-Testing
--------
-
-Mapper is fully unit tested. Run the tests with `bin/test` from a shell. All examples
-in this document can be found in `DocumentationTest`.
-
 Limitations
 -----------
 
  - Strategies do not know the name of the key they are assigned to because `Mapper` does not forward the key name.
  - Strategies do not know where they sit in a `Mapping` and therefore cannot traverse a mapping relative to their position.
  - The `Collection` strategy overwrites context making any previous context inaccessible to descendants.
+
+Testing
+-------
+
+Mapper is fully unit tested. Run the tests with `bin/test` from a shell. All examples
+in this document can be found in `DocumentationTest`.
 
 
   [Releases]: https://github.com/ScriptFUSION/Mapper/releases
