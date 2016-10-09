@@ -3,10 +3,6 @@ notifications:
 
 sudo: false
 
-cache:
-  directories:
-    - .composer/cache
-
 language: php
 
 php:
