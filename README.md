@@ -2,6 +2,7 @@ Mapper
 ======
 
 [![Latest version][Version image]][Releases]
+[![Total downloads][Downloads image]][Downloads]
 [![Build status][Build image]][Build]
 [![Test coverage][Coverage image]][Coverage]
 [![Code style][Style image]][Style]
@@ -13,6 +14,32 @@ $mappedData = (new Mapper)->map($data, new MyMapping);
 ```
 
 This supposes we already created a mapping, `MyMapping`, to convert `$data` into `$mappedData`.
+
+Contents
+--------
+
+  1. [Mappings](#mappings)
+  2. [Strategies](#strategies)
+  3. [Practical example](#practical-example)
+  4. [Strategy reference](#strategy-reference)
+    1. [Copy](#copy)
+    2. [CopyContext](#copycontext)
+    3. [Callback](#callback)
+    4. [Collection](#collection)
+    5. [Context](#context)
+    6. [Either](#either)
+    7. [Filter](#filter)
+    8. [Flatten](#flatten)
+    9. [IfExists](#ifexists)
+    10. [Merge](#merge)
+    11. [TakeFirst](#takefirst)
+    12. [ToList](#tolist)
+    13. [Type](#type)
+    14. [Unique](#unique)
+    15. [Walk](#walk)
+  5. [Requirements](#requirements)
+  6. [Limitations](#limitations)
+  7. [Testing](#testing)
 
 Mappings
 --------
@@ -718,8 +745,10 @@ in this document can be found in `DocumentationTest`.
 
   [Releases]: https://github.com/ScriptFUSION/Mapper/releases
   [Version image]: https://poser.pugx.org/scriptfusion/mapper/version "Latest version"
+  [Downloads]: https://packagist.org/packages/scriptfusion/mapper
+  [Downloads image]: https://poser.pugx.org/scriptfusion/mapper/downloads "Total downloads"
   [Build]: http://travis-ci.org/ScriptFUSION/Mapper
-  [Build image]: https://travis-ci.org/ScriptFUSION/Mapper.svg "Build status"
+  [Build image]: https://travis-ci.org/ScriptFUSION/Mapper.svg?branch=master "Build status"
   [Coverage]: https://coveralls.io/github/ScriptFUSION/Mapper
   [Coverage image]: https://coveralls.io/repos/ScriptFUSION/Mapper/badge.svg "Test coverage"
   [Style]: https://styleci.io/repos/59734709
