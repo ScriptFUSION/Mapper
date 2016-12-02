@@ -34,9 +34,10 @@ Contents
     10. [Merge](#merge)
     11. [TakeFirst](#takefirst)
     12. [ToList](#tolist)
-    13. [Type](#type)
-    14. [Unique](#unique)
-    15. [Walk](#walk)
+    13. [TryCatch](#trycatch)
+    14. [Type](#type)
+    15. [Unique](#unique)
+    16. [Walk](#walk)
   5. [Requirements](#requirements)
   6. [Limitations](#limitations)
   7. [Testing](#testing)
@@ -648,6 +649,44 @@ ToList(Strategy|Mapping|array|mixed $expression)
 ```
 
 > ['bar']
+
+### TryCatch
+
+Uses the handler callback to catch and manage any exception thrown by the primary strategy, if an exception was raised delegates to a fallback expression.
+
+It is possible to use nested TryCatch strategies to manage different types of exceptions.
+
+#### Signature
+
+```php
+TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $expression)
+```
+
+ 1. `$strategy` &ndash; Primary Strategy that might raise an exception.
+ 2. `$handler` &ndash; Handler function that receives the raised exception as its first argument.
+ 1. `$expression` &ndash; Expression.
+
+#### Examples
+
+```php
+(new Mapper)->map(
+    [],
+    new TryCatch(
+        new Callback(
+            function ($data, $context) {
+                throw new \LogicException;
+            }
+        ),
+        function (\Exception $e) {
+            if (! $e instanceof \LogicException) {
+                throw $e;
+            }
+        },
+        'LogicExceptionHandled'
+    )
+);
+```
+> 'LogicExceptionHandled'
 
 ### Type
 
