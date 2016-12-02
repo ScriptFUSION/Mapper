@@ -18,9 +18,9 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             if ($data[0] === 'DomainError') {
                 throw new \DomainException('Test Exception');
             }
+
             return $data;
         });
-
     }
     public function testTryCatch()
     {
@@ -28,7 +28,8 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
         $tryCatch = (
             new TryCatch(
                 $this->callback,
-                function ($e) {},
+                function ($e) {
+                },
                 'ExceptionHandled'
             )
         )->setMapper(new Mapper);
@@ -50,7 +51,8 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
                 },
                 'LogicExceptionHandled'
             ),
-            function ($e) {},
+            function ($e) {
+            },
             'DomainExceptionHandled'
         )
         )->setMapper(new Mapper);
