@@ -20,6 +20,7 @@ class TryCatch extends Decorator
     public function __construct(Strategy $strategy, callable $handler, $expression)
     {
         parent::__construct($strategy);
+
         $this->handler = $handler;
         $this->expression = $expression;
     }

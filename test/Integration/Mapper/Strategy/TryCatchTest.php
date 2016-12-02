@@ -22,42 +22,45 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             return $data;
         });
     }
+
     public function testTryCatch()
     {
         /** @var TryCatch $tryCatch */
         $tryCatch = (
             new TryCatch(
                 $this->callback,
-                function ($e) {
+                function (\Exception $e) {
                 },
                 'ExceptionHandled'
             )
         )->setMapper(new Mapper);
-        self::assertSame(['foo','bar'], $tryCatch(['foo','bar']));
-        self::assertSame('ExceptionHandled', $tryCatch(['DomainError','foo']));
+
+        self::assertSame(['foo', 'bar'], $tryCatch(['foo', 'bar']));
+        self::assertSame('ExceptionHandled', $tryCatch(['DomainError', 'foo']));
     }
 
     public function testMultipleTryCatch()
     {
         /** @var TryCatch $tryCatch */
         $tryCatch = (
-        new TryCatch(
             new TryCatch(
-                $this->callback,
+                new TryCatch(
+                    $this->callback,
+                    function (\Exception $e) {
+                        if ($e instanceOf \DomainException) {
+                            throw $e;
+                        }
+                    },
+                    'LogicExceptionHandled'
+                ),
                 function ($e) {
-                    if (get_class($e) === \DomainException::class) {
-                        throw $e;
-                    }
                 },
-                'LogicExceptionHandled'
-            ),
-            function ($e) {
-            },
-            'DomainExceptionHandled'
-        )
+                'DomainExceptionHandled'
+            )
         )->setMapper(new Mapper);
-        self::assertSame(['foo','bar'], $tryCatch(['foo','bar']));
-        self::assertSame('LogicExceptionHandled', $tryCatch(['LogicError','foo']));
-        self::assertSame('DomainExceptionHandled', $tryCatch(['DomainError','foo']));
+
+        self::assertSame(['foo', 'bar'], $tryCatch(['foo', 'bar']));
+        self::assertSame('LogicExceptionHandled', $tryCatch(['LogicError', 'foo']));
+        self::assertSame('DomainExceptionHandled', $tryCatch(['DomainError', 'foo']));
     }
 }
