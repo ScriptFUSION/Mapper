@@ -659,7 +659,7 @@ It is possible to use nested TryCatch strategies to manage different types of ex
 #### Signature
 
 ```php
-ToList(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $expression)
+TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $expression)
 ```
 
  1. `$strategy` &ndash; Primary Strategy that might raise an exception.
