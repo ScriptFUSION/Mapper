@@ -30,7 +30,7 @@ class TryCatch extends Decorator
         try {
             return parent::__invoke($data, $context);
         } catch (\Exception $e) {
-            if ($this->handler !== null) {
+            if($this->handler !== null) {
                 call_user_func($this->handler, $e);
             }
 
