@@ -672,14 +672,21 @@ TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $ex
 (new Mapper)->map(
     [],
     new TryCatch(
-        new Callback(
-            function ($data, $context) {
-                throw new \Exception;
-            }
+        new TryCatch(
+            $this->callback,
+            function (\Exception $e) {
+                if (!($e instanceof \LogicException)) {
+                    throw $e;
+                }
+            },
+            'LogicExceptionHandled'
         ),
         function (\Exception $e) {
+            if (!($e instanceof \DomainException)) {
+                throw $e;
+            }
         },
-        'ExceptionHandled'
+        'DomainExceptionHandled'
     )
 );
 ```
