@@ -52,7 +52,7 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
                 new TryCatch(
                     $this->callback,
                     function (\Exception $e) {
-                        if (! $e instanceof \DomainException ) {
+                        if (! $e instanceof \DomainException) {
                             throw $e;
                         }
                     },
