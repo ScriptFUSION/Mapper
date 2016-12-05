@@ -678,7 +678,7 @@ TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $ex
             }
         ),
         function (\Exception $e) {
-            if (!($e instanceof \LogicException)) {
+            if (! $e instanceof \LogicException) {
                 throw $e;
             }
         },
