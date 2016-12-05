@@ -13,10 +13,10 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
     {
         $this->callback = new Callback(function ($data) {
             if ($data[0] === 'LogicError') {
-                throw new \LogicException('Test Exception');
+                throw new \LogicException('Test Logic Exception');
             }
             if ($data[0] === 'DomainError') {
-                throw new \DomainException('Test Exception');
+                throw new \DomainException('Test Domain Exception');
             }
 
             return $data;
@@ -30,6 +30,9 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             new TryCatch(
                 $this->callback,
                 function (\Exception $e) {
+                    if (! $e instanceof \DomainException) {
+                        throw $e;
+                    }
                 },
                 'ExceptionHandled'
             )
@@ -37,6 +40,8 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame(['foo', 'bar'], $tryCatch(['foo', 'bar']));
         self::assertSame('ExceptionHandled', $tryCatch(['DomainError', 'foo']));
+        $this->setExpectedException(\LogicException::class);
+        self::assertNotEquals('ExceptionHandled', $tryCatch(['LogicError', 'foo']));
     }
 
     public function testMultipleTryCatch()
@@ -47,15 +52,18 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
                 new TryCatch(
                     $this->callback,
                     function (\Exception $e) {
-                        if ($e instanceof \DomainException) {
+                        if (! $e instanceof \DomainException ) {
                             throw $e;
                         }
                     },
-                    'LogicExceptionHandled'
+                    'DomainExceptionHandled'
                 ),
-                function ($e) {
+                function (\Exception $e) {
+                    if (! $e instanceof \LogicException) {
+                        throw $e;
+                    }
                 },
-                'DomainExceptionHandled'
+                'LogicExceptionHandled'
             )
         )->setMapper(new Mapper);
 

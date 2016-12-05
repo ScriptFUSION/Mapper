@@ -666,32 +666,27 @@ TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $ex
  2. `$handler` &ndash; Handler function that receives the raised exception as its first argument.
  1. `$expression` &ndash; Expression.
 
-#### Example
+#### Examples
 
 ```php
 (new Mapper)->map(
     [],
     new TryCatch(
-        new TryCatch(
-            $this->callback,
-            function (\Exception $e) {
-                if (!($e instanceof \LogicException)) {
-                    throw $e;
-                }
-            },
-            'LogicExceptionHandled'
+        new Callback(
+            function ($data, $context) {
+                throw new \LogicException;
+            }
         ),
         function (\Exception $e) {
-            if (!($e instanceof \DomainException)) {
+            if (!($e instanceof \LogicException)) {
                 throw $e;
             }
         },
-        'DomainExceptionHandled'
+        'LogicExceptionHandled'
     )
 );
 ```
-
-> 'ExceptionHandled'
+> 'LogicExceptionHandled'
 
 ### Type
 
