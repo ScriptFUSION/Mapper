@@ -14,10 +14,10 @@ class TryCatch extends Decorator
 
     /**
      * @param Strategy $strategy
-     * @param callable $handler
      * @param Strategy|Mapping|array|mixed $expression
+     * @param callable|null $handler
      */
-    public function __construct(Strategy $strategy, callable $handler, $expression)
+    public function __construct(Strategy $strategy, $expression, callable $handler = null)
     {
         parent::__construct($strategy);
 
@@ -30,7 +30,9 @@ class TryCatch extends Decorator
         try {
             return parent::__invoke($data, $context);
         } catch (\Exception $e) {
-            call_user_func($this->handler, $e);
+            if($this->handler !== null) {
+                call_user_func($this->handler, $e);
+            }
 
             return $this->delegate($this->expression, $data, $context);
         }

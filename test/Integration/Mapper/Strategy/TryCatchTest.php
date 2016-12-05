@@ -29,8 +29,6 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
         $tryCatch = (
             new TryCatch(
                 $this->callback,
-                function (\Exception $e) {
-                },
                 'ExceptionHandled'
             )
         )->setMapper(new Mapper);
@@ -46,15 +44,13 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             new TryCatch(
                 new TryCatch(
                     $this->callback,
+                    'LogicExceptionHandled',
                     function (\Exception $e) {
                         if ($e instanceof \DomainException) {
                             throw $e;
                         }
-                    },
-                    'LogicExceptionHandled'
+                    }
                 ),
-                function ($e) {
-                },
                 'DomainExceptionHandled'
             )
         )->setMapper(new Mapper);
