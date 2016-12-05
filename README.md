@@ -294,6 +294,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
+ - [TryCatch](#trycatch) &ndash; Tries the primary strategy and falls back to an expression if an exception is thrown.
  - [Type](#type) &ndash; Casts data to the specified type.
  - [Unique](#unique) &ndash; Creates a collection of unique values by removing duplicates.
  - [Walk](#walk) &ndash; Walks a nested structure to the specified element in the same manner as `Copy`.
@@ -652,9 +653,9 @@ ToList(Strategy|Mapping|array|mixed $expression)
 
 ### TryCatch
 
-Uses the handler callback to catch and manage any exception thrown by the primary strategy, if an exception was raised delegates to a fallback expression.
+Tries the primary strategy and falls back to an expression if an exception is thrown. The thrown exception is passed to the specified exception handler. The handler should throw an exception if it does not expect the exception type it receives.
 
-It is possible to use nested TryCatch strategies to manage different types of exceptions.
+Different fallback expressions can be used for different exception types by nesting multiple instances of this strategy.
 
 #### Signature
 
@@ -662,31 +663,32 @@ It is possible to use nested TryCatch strategies to manage different types of ex
 TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $expression)
 ```
 
- 1. `$strategy` &ndash; Primary Strategy that might raise an exception.
- 2. `$handler` &ndash; Handler function that receives the raised exception as its first argument.
- 1. `$expression` &ndash; Expression.
+ 1. `$strategy` &ndash; Primary strategy.
+ 2. `$handler` &ndash; Exception handler that receives the thrown exception as its first argument.
+ 3. `$expression` &ndash; Fallback expression.
 
 #### Examples
 
 ```php
 (new Mapper)->map(
-    [],
+    ['foo' => 'bar'],
     new TryCatch(
         new Callback(
-            function ($data, $context) {
-                throw new \LogicException;
+            function () {
+                throw new \DomainException;
             }
         ),
-        function (\Exception $e) {
-            if (! $e instanceof \LogicException) {
-                throw $e;
+        function (\Exception $exception) {
+            if (!$exception instanceof \DomainException) {
+                throw $exception;
             }
         },
-        'LogicExceptionHandled'
+        new Copy('foo')
     )
 );
 ```
-> 'LogicExceptionHandled'
+
+> 'bar'
 
 ### Type
 

@@ -15,6 +15,7 @@ use ScriptFUSION\Mapper\Strategy\IfExists;
 use ScriptFUSION\Mapper\Strategy\Merge;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSION\Mapper\Strategy\ToList;
+use ScriptFUSION\Mapper\Strategy\TryCatch;
 use ScriptFUSION\Mapper\Strategy\Type;
 use ScriptFUSION\Mapper\Strategy\Unique;
 use ScriptFUSION\Mapper\Strategy\Walk;
@@ -244,6 +245,29 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         self::assertSame(
             ['bar'],
             (new Mapper)->map(['foo' => 'bar'], new ToList(new Copy('foo')))
+        );
+    }
+
+    public function testTryCatch()
+    {
+        self::assertSame(
+            'bar',
+            (new Mapper)->map(
+                ['foo' => 'bar'],
+                new TryCatch(
+                    new Callback(
+                        function () {
+                            throw new \DomainException;
+                        }
+                    ),
+                    function (\Exception $exception) {
+                        if (!$exception instanceof \DomainException) {
+                            throw $exception;
+                        }
+                    },
+                    new Copy('foo')
+                )
+            )
         );
     }
 

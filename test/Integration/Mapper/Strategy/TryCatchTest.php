@@ -12,11 +12,8 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->callback = new Callback(function ($data) {
-            if ($data[0] === 'LogicError') {
-                throw new \LogicException('Test Logic Exception');
-            }
-            if ($data[0] === 'DomainError') {
-                throw new \DomainException('Test Domain Exception');
+            if ($data[0] instanceof \Exception) {
+                throw $data[0];
             }
 
             return $data;
@@ -30,21 +27,22 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             new TryCatch(
                 $this->callback,
                 function (\Exception $e) {
-                    if (! $e instanceof \DomainException) {
+                    if (!$e instanceof \DomainException) {
                         throw $e;
                     }
                 },
-                'ExceptionHandled'
+                $fallback = 'bar'
             )
         )->setMapper(new Mapper);
 
-        self::assertSame(['foo', 'bar'], $tryCatch(['foo', 'bar']));
-        self::assertSame('ExceptionHandled', $tryCatch(['DomainError', 'foo']));
-        $this->setExpectedException(\LogicException::class);
-        self::assertNotEquals('ExceptionHandled', $tryCatch(['LogicError', 'foo']));
+        self::assertSame($data = ['foo'], $tryCatch($data));
+        self::assertSame($fallback, $tryCatch([new \DomainException]));
+
+        $this->setExpectedException(\RuntimeException::class);
+        $tryCatch([new \RuntimeException]);
     }
 
-    public function testMultipleTryCatch()
+    public function testNestedTryCatch()
     {
         /** @var TryCatch $tryCatch */
         $tryCatch = (
@@ -52,23 +50,26 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
                 new TryCatch(
                     $this->callback,
                     function (\Exception $e) {
-                        if (! $e instanceof \DomainException) {
+                        if (!$e instanceof \DomainException) {
                             throw $e;
                         }
                     },
-                    'DomainExceptionHandled'
+                    $innerFallback = 'bar'
                 ),
                 function (\Exception $e) {
-                    if (! $e instanceof \LogicException) {
+                    if (!$e instanceof \LogicException) {
                         throw $e;
                     }
                 },
-                'LogicExceptionHandled'
+                $outerFallback = 'baz'
             )
         )->setMapper(new Mapper);
 
-        self::assertSame(['foo', 'bar'], $tryCatch(['foo', 'bar']));
-        self::assertSame('LogicExceptionHandled', $tryCatch(['LogicError', 'foo']));
-        self::assertSame('DomainExceptionHandled', $tryCatch(['DomainError', 'foo']));
+        self::assertSame($data = ['foo'], $tryCatch($data));
+        self::assertSame($innerFallback, $tryCatch([new \DomainException]));
+        self::assertSame($outerFallback, $tryCatch([new \LogicException]));
+
+        $this->setExpectedException(\RuntimeException::class);
+        $tryCatch([new \RuntimeException]);
     }
 }

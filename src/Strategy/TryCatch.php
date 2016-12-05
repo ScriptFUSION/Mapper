@@ -4,18 +4,20 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * TryCatch uses the handler callback to catch and manage any exception thrown by
- * the primary strategy, if an exception was raised delegates to a fallback expression.
+ * Tries the primary strategy and falls back to an expression if an exception is thrown.
  */
 class TryCatch extends Decorator
 {
-    private $expression;
+    /** @var callable */
     private $handler;
 
+    /** @var Strategy|Mapping|array|mixed */
+    private $expression;
+
     /**
-     * @param Strategy $strategy
-     * @param callable $handler
-     * @param Strategy|Mapping|array|mixed $expression
+     * @param Strategy $strategy Primary strategy.
+     * @param callable $handler Exception handler.
+     * @param Strategy|Mapping|array|mixed $expression Fallback expression.
      */
     public function __construct(Strategy $strategy, callable $handler, $expression)
     {
@@ -29,8 +31,8 @@ class TryCatch extends Decorator
     {
         try {
             return parent::__invoke($data, $context);
-        } catch (\Exception $e) {
-            call_user_func($this->handler, $e);
+        } catch (\Exception $exception) {
+            call_user_func($this->handler, $exception);
 
             return $this->delegate($this->expression, $data, $context);
         }
