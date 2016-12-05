@@ -652,19 +652,19 @@ ToList(Strategy|Mapping|array|mixed $expression)
 
 ### TryCatch
 
-Uses the handler callback to catch and manage any exception thrown by the primary strategy, if an exception was raised delegates to a fallback expression (if specified).
+Uses the handler callback to catch and manage any exception thrown by the primary strategy, if an exception was raised delegates to a fallback expression.
 
-It is possible to use nested TryCatch strategies to handle different exception types.
+It is possible to use nested TryCatch strategies to manage different types of exceptions.
 
 #### Signature
 
 ```php
-TryCatch(Strategy $strategy, Strategy|Mapping|array|mixed $expression, callable|null $handler)
+TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $expression)
 ```
 
  1. `$strategy` &ndash; Primary Strategy that might raise an exception.
- 2. `$expression` &ndash; Expression.
- 3. `$handler` &ndash; (Optional) Handler function that receives the raised exception as its first argument.
+ 2. `$handler` &ndash; Handler function that receives the raised exception as its first argument.
+ 1. `$expression` &ndash; Expression.
 
 #### Example
 
@@ -672,16 +672,14 @@ TryCatch(Strategy $strategy, Strategy|Mapping|array|mixed $expression, callable|
 (new Mapper)->map(
     [],
     new TryCatch(
-        new TryCatch(
-            $this->callback,
-            'AllButDomainExceptionHandled',
-            function (\Exception $e) {
-                if ($e instanceof \DomainException) {
-                    throw $e;
-                }
+        new Callback(
+            function ($data, $context) {
+                throw new \Exception;
             }
         ),
-        'DomainExceptionHandled'
+        function (\Exception $e) {
+        },
+        'ExceptionHandled'
     )
 );
 ```
