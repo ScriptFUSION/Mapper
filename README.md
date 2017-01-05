@@ -19,28 +19,29 @@ Contents
 --------
 
   1. [Mappings](#mappings)
-  2. [Strategies](#strategies)
-  3. [Practical example](#practical-example)
-  4. [Strategy reference](#strategy-reference)
+  1. [Strategies](#strategies)
+  1. [Practical example](#practical-example)
+  1. [Strategy reference](#strategy-reference)
     1. [Copy](#copy)
-    2. [CopyContext](#copycontext)
-    3. [Callback](#callback)
-    4. [Collection](#collection)
-    5. [Context](#context)
-    6. [Either](#either)
-    7. [Filter](#filter)
-    8. [Flatten](#flatten)
-    9. [IfExists](#ifexists)
-    10. [Merge](#merge)
-    11. [TakeFirst](#takefirst)
-    12. [ToList](#tolist)
-    13. [TryCatch](#trycatch)
-    14. [Type](#type)
-    15. [Unique](#unique)
-    16. [Walk](#walk)
-  5. [Requirements](#requirements)
-  6. [Limitations](#limitations)
-  7. [Testing](#testing)
+    1. [CopyContext](#copycontext)
+    1. [CopyKey](#copykey)
+    1. [Callback](#callback)
+    1. [Collection](#collection)
+    1. [Context](#context)
+    1. [Either](#either)
+    1. [Filter](#filter)
+    1. [Flatten](#flatten)
+    1. [IfExists](#ifexists)
+    1. [Merge](#merge)
+    1. [TakeFirst](#takefirst)
+    1. [ToList](#tolist)
+    1. [TryCatch](#trycatch)
+    1. [Type](#type)
+    1. [Unique](#unique)
+    1. [Walk](#walk)
+  1. [Requirements](#requirements)
+  1. [Limitations](#limitations)
+  1. [Testing](#testing)
 
 Mappings
 --------
@@ -281,6 +282,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
 
  - [Copy](#copy) &ndash; Copies a portion of input data.
  - [CopyContext](#copycontext) &ndash; Copies a portion of context data.
+ - [CopyKey](#copykey) &ndash; Copies the current key.
 
 #### Augmenters
 
@@ -358,6 +360,34 @@ $context = ['foo' => 456];
 
 > 456
 
+### CopyKey
+
+Copies the current key from the key context. This strategy requires the key context to be set by another strategy. By default the key context is `null`. Currently only the [collection strategy](#collection) sets a key context.
+
+#### Signature
+
+```php
+CopyKey()
+```
+
+#### Example
+
+```php
+(new Mapper)->map(
+    [
+        'foo' => [
+            'bar' => 'baz',
+        ],
+    ],
+    new Collection(
+        new Copy('foo'),
+        new CopyKey
+    )
+)
+```
+
+> ['bar' => 'bar']
+
 ### Callback
 
 Augments data using the return value of the specified callback.
@@ -396,6 +426,8 @@ Callback(callable $callback)
 ### Collection
 
 Maps a collection of data by applying a transformation to each datum using a callback. The data collection must be an expression that maps to an array otherwise null is returned.
+
+For each item in the collection, this strategy sets the context to the current datum and the key context to the current key, which can be retrieved using [CopyKey](#copykey).
 
 #### Signature
 

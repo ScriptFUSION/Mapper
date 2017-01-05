@@ -8,6 +8,7 @@ use ScriptFUSION\Mapper\Strategy\Collection;
 use ScriptFUSION\Mapper\Strategy\Context;
 use ScriptFUSION\Mapper\Strategy\Copy;
 use ScriptFUSION\Mapper\Strategy\CopyContext;
+use ScriptFUSION\Mapper\Strategy\CopyKey;
 use ScriptFUSION\Mapper\Strategy\Either;
 use ScriptFUSION\Mapper\Strategy\Filter;
 use ScriptFUSION\Mapper\Strategy\Flatten;
@@ -102,6 +103,24 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         $context = ['foo' => 456];
 
         self::assertSame(456, (new Mapper)->map($data, new CopyContext('foo'), $context));
+    }
+
+    public function testCopyKey()
+    {
+        self::assertSame(
+            ['bar' => 'bar'],
+            (new Mapper)->map(
+                [
+                    'foo' => [
+                        'bar' => 'baz',
+                    ],
+                ],
+                new Collection(
+                    new Copy('foo'),
+                    new CopyKey
+                )
+            )
+        );
     }
 
     public function testCallback()

@@ -9,8 +9,10 @@ use ScriptFUSION\Mapper\Strategy\Strategy;
 class Mapper
 {
     /**
-     * Maps the specified record according to the specified expression type. May be called recursively if the expression
-     * embeds other expressions. If context is specified it is passed to the expression and any descendant expressions.
+     * Maps the specified record according to the specified expression type. Optionally, used-defined contextual data
+     * may be passed to the expression. The record key is for internal use only and represents the current array key.
+     *
+     * May be called recursively if the expression embeds more expressions.
      *
      * @param array $record Record.
      * @param Strategy|Mapping|array|mixed $expression Expression.
