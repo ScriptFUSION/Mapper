@@ -14,23 +14,24 @@ class Mapper
      *
      * @param array $record Record.
      * @param Strategy|Mapping|array|mixed $expression Expression.
-     * @param mixed $context Context.
+     * @param mixed $context Optional. Contextual data.
+     * @param string|int|null $key Internal. Record key.
      *
      * @return mixed
      *
      * @throws InvalidExpressionException An invalid strategy or mapping object was specified.
      */
-    public function map(array $record, $expression, $context = null)
+    public function map(array $record, $expression, $context = null, $key = null)
     {
         /* Strategy. */
         if ($expression instanceof Strategy) {
-            return $this->mapStrategy($record, $expression, $context);
+            return $this->mapStrategy($record, $expression, $context, $key);
         } /* Mapping. */
         elseif ($expression instanceof Mapping) {
-            return $this->mapMapping($record, $expression, $context);
+            return $this->mapMapping($record, $expression, $context, $key);
         } /* Mapping fragment. */
         elseif (is_array($expression)) {
-            return $this->mapFragment($record, $expression, $context);
+            return $this->mapFragment($record, $expression, $context, $key);
         } /* Null or scalar values. */
         elseif (null === $expression || is_scalar($expression)) {
             return $expression;
@@ -42,15 +43,16 @@ class Mapper
     /**
      * @param array $record Record.
      * @param Mapping $mapping Mapping.
-     * @param mixed $context Contextual data.
+     * @param mixed $context Optional. Contextual data.
+     * @param string|int|null $key Internal. Record key.
      *
      * @return array Mapped record.
      *
      * @throws \Exception
      */
-    protected function mapMapping(array $record, Mapping $mapping, $context = null)
+    protected function mapMapping(array $record, Mapping $mapping, $context = null, $key = null)
     {
-        $mapped = $this->mapFragment($record, $mapping->toArray(), $context);
+        $mapped = $this->mapFragment($record, $mapping->toArray(), $context, $key);
 
         if ($mapping->isWrapped()) {
             // Unwrap.
@@ -60,12 +62,23 @@ class Mapper
         return $mapped;
     }
 
-    protected function mapFragment(array $record, array $fragment, $context = null)
+    /**
+     * @param array $record Record.
+     * @param array $fragment Mapping.
+     * @param null $context Optional. Contextual data.
+     * @param string|int|null $key Internal. Record key.
+     *
+     * @return array Mapped record.
+     *
+     * @throws \Exception Mapping failed for an unknown reason.
+     */
+    protected function mapFragment(array $record, array $fragment, $context = null, $key = null)
     {
         if (array_walk(
             $fragment,
-            function (&$strategy, $key, array $record) use ($context) {
-                $strategy = $this->map($record, $strategy, $context);
+            // Mapping fragment keys are not useful because they are hard-coded.
+            function (&$expression, $_, array $record) use ($context, $key) {
+                $expression = $this->map($record, $expression, $context, $key);
             },
             $record
         )) {
@@ -76,14 +89,17 @@ class Mapper
     }
 
     /**
-     * @param array $record
-     * @param Strategy $strategy
-     * @param mixed $context
+     * @param array $record Record.
+     * @param Strategy $strategy Strategy.
+     * @param mixed $context Optional. Contextual data.
+     * @param string|int|null $key Internal. Record key.
      *
      * @return mixed
      */
-    protected function mapStrategy(array $record, Strategy $strategy, $context = null)
+    protected function mapStrategy(array $record, Strategy $strategy, $context = null, $key = null)
     {
+        $strategy instanceof KeyAware && $strategy->setKey($key);
+
         $this->injectDependencies($strategy);
 
         return $strategy($record, $context);

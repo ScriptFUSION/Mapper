@@ -31,8 +31,10 @@ class Collection extends Delegate
             return null;
         }
 
-        return array_map(function ($context) use ($data) {
-            return $this->delegate($this->transformation, $data, $context);
-        }, $collection);
+        array_walk($collection, function (&$value, $key) use ($data) {
+            $value = $this->delegate($this->transformation, $data, $value, $key);
+        });
+
+        return $collection;
     }
 }

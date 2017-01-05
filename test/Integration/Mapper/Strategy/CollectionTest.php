@@ -20,22 +20,26 @@ final class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         /** @var Collection $collection */
         $collection = (new Collection(
-            $this->createCollection('foo'),
+            $this->createArray('foo'),
             [
                 'bar' => new CopyContext('foo'),
             ]
         ))->setMapper(new Mapper);
 
-        self::assertSame($this->createCollection('bar'), $collection([]));
+        self::assertSame($this->createArray('bar'), $collection([]));
     }
 
-    private function createCollection($key)
+    private function createArray($key)
     {
-        return array_map(
-            function ($number) use ($key) {
-                return [$key => $number];
-            },
-            range(1, 10)
+        return array_combine(
+            // Keys must not change.
+            range('a', 'j'),
+            array_map(
+                function ($number) use ($key) {
+                    return [$key => $number];
+                },
+                range('k', 't')
+            )
         );
     }
 }
