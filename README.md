@@ -518,7 +518,7 @@ Filter(Strategy|Mapping|array|mixed $expression, callable $callback = null)
 ```
 
  1. `$expression` &ndash; Expression.
- 2. `$callback` &ndash; Callback function that receives the current value as its first argument.
+ 2. `$callback` &ndash; Callback function that receives the current value as its first argument, the current key as its second argument and context as its third argument.
 
 #### Example
 

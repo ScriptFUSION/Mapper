@@ -12,32 +12,38 @@ final class FilterTest extends \PHPUnit_Framework_TestCase
     public function testDefaultCallback()
     {
         $filter = new Filter(null);
-        $filter->setMapper(MockFactory::mockMapper([null, 0, "0", null]));
+        $filter->setMapper(MockFactory::mockMapper([null, 0, '0', null]));
 
-        self::assertEquals([0, "0"], array_values($filter([])));
+        self::assertSame([1 => 0, 2 => '0'], $filter([]));
     }
 
-    public function testCustomCallback()
+    public function testFilterByValue()
     {
         $filter = new Filter(null, function ($value) {
             return $value['foo'] === 'bar';
         });
 
         $filter->setMapper(MockFactory::mockMapper([
-            [
-                'foo' => 'bar',
-            ],
-            [
-                'foo' => 'baz',
-            ],
+            $bar = ['foo' => 'bar'],
+            ['foo' => 'baz'],
         ]));
 
-        self::assertEquals([['foo' => 'bar']], $filter([]));
+        self::assertSame([$bar], $filter([]));
+    }
+
+    public function testFilterByKey()
+    {
+        $filter = new Filter(null, function ($_, $key) {
+            return $key % 2;
+        });
+        $filter->setMapper(MockFactory::mockMapper(range('a', 'e')));
+
+        self::assertSame([1 => 'b', 3 => 'd'], $filter([]));
     }
 
     public function testContextPassed()
     {
-        $filter = new Filter(null, function ($_, $context) {
+        $filter = new Filter(null, function ($_, $__, $context) {
             self::assertSame('foo', $context);
         });
         $filter->setMapper(MockFactory::mockMapper(['bar']));
