@@ -1,6 +1,7 @@
 <?php
 namespace ScriptFUSIONTest;
 
+use Mockery\MockInterface;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\StaticClass;
 
@@ -11,7 +12,7 @@ final class MockFactory
     /**
      * @param mixed $data
      *
-     * @return Mapper
+     * @return Mapper|MockInterface
      */
     public static function mockMapper($data)
     {

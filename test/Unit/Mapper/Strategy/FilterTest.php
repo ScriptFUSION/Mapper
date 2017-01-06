@@ -35,6 +35,16 @@ final class FilterTest extends \PHPUnit_Framework_TestCase
         self::assertEquals([['foo' => 'bar']], $filter([]));
     }
 
+    public function testContextPassed()
+    {
+        $filter = new Filter(null, function ($_, $context) {
+            self::assertSame('foo', $context);
+        });
+        $filter->setMapper(MockFactory::mockMapper(['bar']));
+
+        $filter([], 'foo');
+    }
+
     public function testNonArray()
     {
         $filter = new Filter(null);

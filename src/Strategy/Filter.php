@@ -27,8 +27,18 @@ class Filter extends Delegate
             return null;
         }
 
-        return array_filter($data, $this->callback ?: function ($value) {
-            return $value !== null;
-        });
+        $filter = function (array $data, $context) {
+            $callback = $this->callback ?: function ($value) {
+                return $value !== null;
+            };
+
+            foreach ($data as $datum) {
+                if ($callback($datum, $context)) {
+                    yield $datum;
+                }
+            }
+        };
+
+        return iterator_to_array($filter($data, $context));
     }
 }
