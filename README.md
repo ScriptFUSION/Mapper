@@ -812,7 +812,7 @@ Limitations
 Testing
 -------
 
-Mapper is fully unit tested. Run the tests with `bin/test` from a shell. All examples
+Mapper is fully unit tested. Run the tests with the `composer test` command. All examples
 in this document can be found in `DocumentationTest`.
 
 

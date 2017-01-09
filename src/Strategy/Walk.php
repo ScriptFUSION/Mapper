@@ -16,7 +16,7 @@ class Walk extends Copy implements MapperAware
 
     /**
      * @param Strategy|Mapping|array|mixed $expression Expression.
-     * @param array|string $path Array of path components or string of  `->`-delimited components.
+     * @param array|string $path Array of path components or string of `->`-delimited components.
      */
     public function __construct($expression, $path)
     {

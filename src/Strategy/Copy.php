@@ -15,7 +15,7 @@ class Copy implements Strategy
     /**
      * Initializes this instance with the specified path.
      *
-     * @param array|string $path Array of path components or string of  `->`-delimited components.
+     * @param array|string $path Array of path components or string of `->`-delimited components.
      */
     public function __construct($path)
     {
