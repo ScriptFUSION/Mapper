@@ -15,8 +15,8 @@
   },
   "require-dev": {
     "scriptfusion/static-class": "^1",
-    "phpunit/phpunit": "^4",
-    "mockery/mockery": "^0"
+    "phpunit/phpunit": "^4.8",
+    "mockery/mockery": "^0.9.4"
   },
   "autoload": {
     "psr-4": {

@@ -35,6 +35,7 @@ Contents
     1. [Merge](#merge)
     1. [TakeFirst](#takefirst)
     1. [ToList](#tolist)
+    1. [Translate](#translate)
     1. [TryCatch](#trycatch)
     1. [Type](#type)
     1. [Unique](#unique)
@@ -296,6 +297,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
+ - [Translate](#translate) &ndash; Translates a value using a mapping.
  - [TryCatch](#trycatch) &ndash; Tries the primary strategy and falls back to an expression if an exception is thrown.
  - [Type](#type) &ndash; Casts data to the specified type.
  - [Unique](#unique) &ndash; Creates a collection of unique values by removing duplicates.
@@ -682,6 +684,33 @@ ToList(Strategy|Mapping|array|mixed $expression)
 ```
 
 > ['bar']
+
+### Translate
+
+Translates a value using a mapping. The mapping may derived from any valid expression.
+
+#### Signature
+
+```php
+Translate(Strategy $value, Strategy|Mapping|array|mixed $mapping)
+```
+
+ 1. `$value` &ndash; Value used to match against an entry in the mapping.
+ 2. `$mapping` &ndash; Mapping that specifies what the value may be translated to.
+
+#### Example
+
+```php
+(new Mapper)->map(
+    ['foo' => 'foo'],
+    new Translate(
+        new Copy('foo'),
+        ['foo' => 'bar']
+    )
+);
+```
+
+> 'bar'
 
 ### TryCatch
 
