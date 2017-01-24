@@ -9,7 +9,7 @@
   ],
   "license": "LGPL-3.0",
   "require": {
-    "php": ">=5.5",
+    "php": "^5.6|^7",
     "scriptfusion/array-walker": "^1",
     "eloquent/enumeration": "^5"
   },

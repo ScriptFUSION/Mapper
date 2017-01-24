@@ -32,6 +32,7 @@ Contents
     1. [Filter](#filter)
     1. [Flatten](#flatten)
     1. [IfExists](#ifexists)
+    1. [Join](#join)
     1. [Merge](#merge)
     1. [TakeFirst](#takefirst)
     1. [ToList](#tolist)
@@ -294,6 +295,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Filter](#filter) &ndash; Filters null values or values rejected by the specified callback.
  - [Flatten](#flatten) &ndash; Moves all nested values to the top level.
  - [IfExists](#ifexists) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
+ - [Join](#join) &ndash; Joins sub-string expressions together with a glue string.
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
@@ -605,6 +607,30 @@ $data = ['foo' => 'foo'];
 
 > false
 
+### Join
+
+Joins sub-string expressions together with a glue string.
+
+#### Signature
+
+```php
+Join(string $glue, array ...$expressions)
+```
+
+ 1. `$glue` &ndash; Glue.
+ 2. `$expressions` &ndash; Sub-string expressions.
+
+#### Example
+
+```php
+(new Mapper)->map(
+    ['foo' => 'foo'],
+    new Join('-', new Copy('foo'), 'bar')
+);
+```
+
+> 'foo-bar'
+
 ### Merge
 
 Merges two data sets together giving precedence to the latter if string keys collide; integer keys never collide. For more information see [array_merge](http://php.net/manual/en/function.array-merge.php).
@@ -828,7 +854,7 @@ Walk(Strategy|Mapping|array|mixed $expression, array|string $path)
 Requirements
 ------------
 
- - [PHP 5.5](http://php.net/)
+ - [PHP 5.6](http://php.net/)
  - [Composer](https://getcomposer.org/)
 
 Limitations

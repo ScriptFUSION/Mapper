@@ -13,6 +13,7 @@ use ScriptFUSION\Mapper\Strategy\Either;
 use ScriptFUSION\Mapper\Strategy\Filter;
 use ScriptFUSION\Mapper\Strategy\Flatten;
 use ScriptFUSION\Mapper\Strategy\IfExists;
+use ScriptFUSION\Mapper\Strategy\Join;
 use ScriptFUSION\Mapper\Strategy\Merge;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSION\Mapper\Strategy\ToList;
@@ -226,6 +227,17 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
 
         self::assertTrue((new Mapper)->map($data, new IfExists(new Copy('foo'), true, false)));
         self::assertFalse((new Mapper)->map($data, new IfExists(new Copy('bar'), true, false)));
+    }
+
+    public function testJoin()
+    {
+        self::assertSame(
+            'foo-bar',
+            (new Mapper)->map(
+                ['foo' => 'foo'],
+                new Join('-', new Copy('foo'), 'bar')
+            )
+        );
     }
 
     public function testMerge()
