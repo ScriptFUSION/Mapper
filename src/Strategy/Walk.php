@@ -1,18 +1,17 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\Mapper\MapperAware;
-use ScriptFUSION\Mapper\MapperAwareTrait;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
  * Walks a nested structure to the specified element in the same manner as Copy.
  */
-class Walk extends Copy implements MapperAware
+class Walk extends Delegate
 {
-    use MapperAwareTrait;
-
-    private $expression;
+    /**
+     * @var Copy
+     */
+    private $copy;
 
     /**
      * @param Strategy|Mapping|array|mixed $expression Expression.
@@ -20,13 +19,13 @@ class Walk extends Copy implements MapperAware
      */
     public function __construct($expression, $path)
     {
-        parent::__construct($path);
+        parent::__construct($expression);
 
-        $this->expression = $expression;
+        $this->copy = new Copy($path);
     }
 
     public function __invoke($data, $context = null)
     {
-        return parent::__invoke($this->getMapper()->map($data, $this->expression, $context), $context);
+        return call_user_func($this->copy, parent::__invoke($data, $context), $context);
     }
 }
