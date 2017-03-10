@@ -4,11 +4,9 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Delegates to one expression or another depending on whether the specified condition maps to null.
- *
- * @deprecated Use IfElse and Exists strategies instead.
+ * Delegates to one expression or another depending on whether the specified condition loosely evaluates to true.
  */
-class IfExists extends Decorator
+class IfElse extends Delegate
 {
     /** @var Strategy|Mapping|array|mixed */
     private $if;
@@ -22,11 +20,11 @@ class IfExists extends Decorator
      * optionally, the specified strategy or mapping to be resolved when
      * condition is null.
      *
-     * @param Strategy $condition Condition.
+     * @param Strategy|Mapping|array|mixed $condition Condition.
      * @param Strategy|Mapping|array|mixed $if Primary expression.
      * @param Strategy|Mapping|array|mixed|null $else Optional. Fallback expression.
      */
-    public function __construct(Strategy $condition, $if, $else = null)
+    public function __construct($condition, $if, $else = null)
     {
         parent::__construct($condition);
 
@@ -46,7 +44,7 @@ class IfExists extends Decorator
      */
     public function __invoke($data, $context = null)
     {
-        if (parent::__invoke($data, $context) !== null) {
+        if (parent::__invoke($data, $context)) {
             return $this->delegate($this->if, $data, $context);
         }
 
