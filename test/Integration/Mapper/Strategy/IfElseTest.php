@@ -61,5 +61,4 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
         self::assertNull($ifElse([]));
         self::assertNull($ifElse([]));
     }
-
 }
