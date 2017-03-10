@@ -27,6 +27,7 @@ class IfElse extends Delegate
     public function __construct(callable $condition, $if, $else = null)
     {
         parent::__construct($if);
+
         $this->condition = $condition;
         $this->else = $else;
     }
@@ -44,13 +45,13 @@ class IfElse extends Delegate
      */
     public function __invoke($data, $context = null)
     {
-        $return = call_user_func($this->condition, $data, $context);
+        $result = call_user_func($this->condition, $data, $context);
 
-        if (!is_bool($return)) {
+        if (!is_bool($result)) {
             throw new InvalidConditionException('Invalid return from condition: must be of type boolean.');
         }
 
-        if ($return === true) {
+        if ($result === true) {
             return parent::__invoke($data, $context);
         }
 

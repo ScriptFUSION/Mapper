@@ -224,39 +224,12 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
 
     public function testIfElse()
     {
-        $data = [1, 3, 5, 6];
-
         self::assertTrue(
             (new Mapper)->map(
-                $data,
+                ['foo' => 'foo'],
                 new IfElse(
                     function ($data) {
-                        foreach ($data as $datum) {
-                            if ($datum <= 0) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    },
-                    true,
-                    false
-                )
-            )
-        );
-
-        self::assertFalse(
-            (new Mapper)->map(
-                $data,
-                new IfElse(
-                    function ($data) {
-                        foreach ($data as $datum) {
-                            if ($datum % 2) {
-                                return false;
-                            }
-                        }
-
-                        return true;
+                        return $data['foo'] !== 'bar';
                     },
                     true,
                     false

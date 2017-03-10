@@ -583,7 +583,7 @@ $data = [
 
 Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
 
-If the condition does not return a boolean an InvalidReturnException will be thrown.
+If the condition does not return a boolean, `InvalidConditionException` is thrown.
 
 #### Signature
 
@@ -592,26 +592,17 @@ IfElse(callable $condition, Strategy|Mapping|array|mixed $if, Strategy|Mapping|a
 ```
 
  1. `$condition` &ndash; Condition.
- 2. `$if` &ndash; Expression used when condition loosely evaluates to true.
- 3. `$else` &ndash; Expression used when condition loosely evaluates to false.
+ 2. `$if` &ndash; Expression used when condition evaluates to true.
+ 3. `$else` &ndash; Expression used when condition evaluates to false.
 
 #### Example
 
-Test if all items in $data are positive.
-
 ```php
-$data = [1, 3, 5, 6];
-
 (new Mapper)->map(
-    $data,
+    ['foo' => 'foo'],
     new IfElse(
         function ($data) {
-            foreach ($data as $datum) {
-                if ($datum <= 0) {
-                    return false;
-                }
-            }
-            return true;
+            return $data['foo'] !== 'bar';
         },
         true,
         false
@@ -620,28 +611,6 @@ $data = [1, 3, 5, 6];
 ```
 
 > true
-
-Test if all items in $data are even.
-
-```php
-(new Mapper)->map(
-    $data,
-    new IfElse(
-        function ($data) {
-            foreach ($data as $datum) {
-                if ($datum % 2 === 0) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        true,
-        false
-    )
-);
-```
-
-> false
 
 ### IfExists
 

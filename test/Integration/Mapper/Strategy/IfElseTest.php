@@ -1,15 +1,12 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\InvalidConditionException;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\IfElse;
 
 final class IfElseTest extends \PHPUnit_Framework_TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private $condition;
 
     public function setUp()
