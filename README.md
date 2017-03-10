@@ -31,6 +31,7 @@ Contents
     1. [Either](#either)
     1. [Filter](#filter)
     1. [Flatten](#flatten)
+    1. [IfElse](#ifelse)
     1. [IfExists](#ifexists)
     1. [Join](#join)
     1. [Merge](#merge)
@@ -294,6 +295,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Either](#either) &ndash; Either uses the primary strategy, if it returns non-null, otherwise delegates to a fallback expression.
  - [Filter](#filter) &ndash; Filters null values or values rejected by the specified callback.
  - [Flatten](#flatten) &ndash; Moves all nested values to the top level.
+ - [IfElse](#ifelse) &ndash; Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
  - [IfExists](#ifexists) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
  - [Join](#join) &ndash; Joins sub-string expressions together with a glue string.
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
@@ -576,6 +578,39 @@ $data = [
 ```
 
 > [1, 2, 3, 3, 4, 5]
+
+### IfElse
+
+Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
+
+If the condition does not return a boolean, `InvalidConditionException` is thrown.
+
+#### Signature
+
+```php
+IfElse(callable $condition, Strategy|Mapping|array|mixed $if, Strategy|Mapping|array|mixed $else = null)
+```
+
+ 1. `$condition` &ndash; Condition.
+ 2. `$if` &ndash; Expression used when condition evaluates to true.
+ 3. `$else` &ndash; Expression used when condition evaluates to false.
+
+#### Example
+
+```php
+(new Mapper)->map(
+    ['foo' => 'foo'],
+    new IfElse(
+        function ($data) {
+            return $data['foo'] !== 'bar';
+        },
+        true,
+        false
+    )
+);
+```
+
+> true
 
 ### IfExists
 
