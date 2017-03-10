@@ -1,6 +1,7 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+use ScriptFUSION\Mapper\InvalidReturnException;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
@@ -25,8 +26,8 @@ class IfElse extends Delegate
      */
     public function __construct(callable $condition, $if, $else = null)
     {
-        $this->condition = $condition;
         parent::__construct($if);
+        $this->condition = $condition;
         $this->else = $else;
     }
 
@@ -37,11 +38,19 @@ class IfElse extends Delegate
      * @param mixed $data
      * @param mixed $context
      *
+     * @throws InvalidReturnException
+     *
      * @return mixed
      */
     public function __invoke($data, $context = null)
     {
-        if (call_user_func($this->condition, $data, $context) === true) {
+        $return = call_user_func($this->condition, $data, $context);
+
+        if (!is_bool($return)) {
+            throw new InvalidReturnException('Invalid return from condition: must be of type boolean.');
+        }
+
+        if ($return === true) {
             return parent::__invoke($data, $context);
         }
 

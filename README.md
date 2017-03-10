@@ -583,6 +583,8 @@ $data = [
 
 Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
 
+If the condition does not return a boolean an InvalidReturnException will be thrown.
+
 #### Signature
 
 ```php
@@ -644,8 +646,6 @@ Test if all items in $data are even.
 ### IfExists
 
 Delegates to one expression or another depending on whether the specified condition maps to null.
-
-Deprecated. Use IfElse and Exists strategies instead.
 
 #### Signature
 

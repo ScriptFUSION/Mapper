@@ -2,6 +2,7 @@
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ScriptFUSION\Mapper\InvalidReturnException;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Exists;
 use ScriptFUSION\Mapper\Strategy\IfElse;
@@ -38,8 +39,10 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
         self::assertNull($ifElse([]));
     }
 
-    public function testNonStrict()
+    public function testStrictness()
     {
+        $this->setExpectedException(InvalidReturnException::class);
+
         $ifElse = (new IfElse(
             function () {
                 return 1;
@@ -48,6 +51,6 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
             'bar'
         ))->setMapper(new Mapper);
 
-        self::assertSame('bar', $ifElse([]));
+        $ifElse([]);
     }
 }

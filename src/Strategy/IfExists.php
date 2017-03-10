@@ -20,8 +20,12 @@ class IfExists extends IfElse
      */
     public function __construct(Strategy $condition, $if, $else = null)
     {
-        parent::__construct(function ($data, $context = null) use ($condition) {
-            return $this->delegate($condition, $data, $context) !== null;
-        }, $if, $else);
+        parent::__construct(
+            function ($data, $context = null) use ($condition) {
+                return $this->delegate($condition, $data, $context) !== null;
+            },
+            $if,
+            $else
+        );
     }
 }
