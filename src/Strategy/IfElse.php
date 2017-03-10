@@ -4,38 +4,35 @@ namespace ScriptFUSION\Mapper\Strategy;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Delegates to one expression or another depending on whether the specified condition loosely evaluates to true.
+ * Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
  */
 class IfElse extends Delegate
 {
-    /** @var Strategy|Mapping|array|mixed */
-    private $if;
+    /** @var callable */
+    private $condition;
 
     /** @var Strategy|Mapping|array|mixed */
     private $else;
 
     /**
      * Initializes this instance with the specified condition, the specified
-     * strategy or mapping to be resolved when condition is non-null and,
-     * optionally, the specified strategy or mapping to be resolved when
-     * condition is null.
+     * expression to be resolved when condition is true and, optionally, the
+     * specified expression to be resolved when condition is false.
      *
-     * @param Strategy|Mapping|array|mixed $condition Condition.
+     * @param callable $condition Condition.
      * @param Strategy|Mapping|array|mixed $if Primary expression.
      * @param Strategy|Mapping|array|mixed|null $else Optional. Fallback expression.
      */
-    public function __construct($condition, $if, $else = null)
+    public function __construct(callable $condition, $if, $else = null)
     {
-        parent::__construct($condition);
-
-        $this->if = $if;
+        $this->condition = $condition;
+        parent::__construct($if);
         $this->else = $else;
     }
 
     /**
-     * Resolves the stored strategy or mapping when the stored condition
-     * resolves to a non-null value, otherwise returns the stored default
-     * value.
+     * Resolves the stored expression when the stored condition strictly
+     * evaluates to true, otherwise resolve the stored fallback expression.
      *
      * @param mixed $data
      * @param mixed $context
@@ -44,12 +41,10 @@ class IfElse extends Delegate
      */
     public function __invoke($data, $context = null)
     {
-        if (parent::__invoke($data, $context)) {
-            return $this->delegate($this->if, $data, $context);
+        if (call_user_func($this->condition, $data, $context) === true) {
+            return parent::__invoke($data, $context);
         }
 
-        if ($this->else !== null) {
-            return $this->delegate($this->else, $data, $context);
-        }
+        return $this->delegate($this->else, $data, $context);
     }
 }

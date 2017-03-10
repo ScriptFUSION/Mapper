@@ -29,11 +29,10 @@ Contents
     1. [Collection](#collection)
     1. [Context](#context)
     1. [Either](#either)
-    1. [Exists](#exists)
     1. [Filter](#filter)
     1. [Flatten](#flatten)
     1. [IfElse](#ifelse)
-    1. [IfExists](#ifexists) (deprecated)
+    1. [IfExists](#ifexists)
     1. [Join](#join)
     1. [Merge](#merge)
     1. [TakeFirst](#takefirst)
@@ -293,12 +292,11 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Callback](#callback) &ndash; Augments data using the specified callback.
  - [Collection](#collection) &ndash; Maps a collection of data by applying a transformation to each datum.
  - [Context](#context) &ndash; Replaces the context for the specified expression.
- - [Exists](#exists) &ndash; Returns true or false if the resolved value of the strategy or the path exists.
  - [Either](#either) &ndash; Either uses the primary strategy, if it returns non-null, otherwise delegates to a fallback expression.
  - [Filter](#filter) &ndash; Filters null values or values rejected by the specified callback.
  - [Flatten](#flatten) &ndash; Moves all nested values to the top level.
- - [IfElse](#ifelse) &ndash; Delegates to one expression or another depending on whether the specified condition loosely evaluates to true.
- - [IfExists](#ifexists) (deprecated) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
+ - [IfElse](#ifelse) &ndash; Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
+ - [IfExists](#ifexists) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
  - [Join](#join) &ndash; Joins sub-string expressions together with a glue string.
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
@@ -515,34 +513,6 @@ Either(Strategy $strategy, Strategy|Mapping|array|mixed $expression)
 
 > 'bar'
 
-### Exists
-
-Returns true or false if the resolved value of the strategy or the path exists.
-
-#### Signature
-
-```php
-Exists(Strategy|array|mixed $strategyOrPath)
-```
-
- 1. `$strategyOrPath` &ndash;  Strategy, array of path components or string of `->`-delimited components.
-
-#### Example
-
-```php
-$data = ['foo' => 'bar']
-
-(new Mapper)->map($data, new Exists('foo'));
-```
-
-> true
-
-```php
-(new Mapper)->map($data, new Exists('bar'));
-```
-
-> false
-
 ### Filter
 
 Filters null values or values rejected by the specified callback.
@@ -611,12 +581,12 @@ $data = [
 
 ### IfElse
 
-Delegates to one expression or another depending on whether the specified condition loosely evaluates to true.
+Delegates to one expression or another depending on whether the specified condition strictly evaluates to true.
 
 #### Signature
 
 ```php
-IfElse(Strategy $condition, Strategy|Mapping|array|mixed $if, Strategy|Mapping|array|mixed $else = null)
+IfElse(callable $condition, Strategy|Mapping|array|mixed $if, Strategy|Mapping|array|mixed $else = null)
 ```
 
  1. `$condition` &ndash; Condition.
@@ -625,16 +595,48 @@ IfElse(Strategy $condition, Strategy|Mapping|array|mixed $if, Strategy|Mapping|a
 
 #### Example
 
-```php
-$data = ['foo' => 'bar'];
+Test if all items in $data are positive.
 
-(new Mapper)->map($data, new IfElse(new Exists('foo'), true, false));
+```php
+$data = [1, 3, 5, 6];
+
+(new Mapper)->map(
+    $data,
+    new IfElse(
+        function ($data) {
+            foreach ($data as $datum) {
+                if ($datum <= 0) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        true,
+        false
+    )
+);
 ```
 
 > true
 
+Test if all items in $data are even.
+
 ```php
-(new Mapper)->map($data, new IfElse(new Exists('bar'), true, false));
+(new Mapper)->map(
+    $data,
+    new IfElse(
+        function ($data) {
+            foreach ($data as $datum) {
+                if ($datum % 2 === 0) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        true,
+        false
+    )
+);
 ```
 
 > false

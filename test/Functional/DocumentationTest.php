@@ -12,6 +12,7 @@ use ScriptFUSION\Mapper\Strategy\CopyKey;
 use ScriptFUSION\Mapper\Strategy\Either;
 use ScriptFUSION\Mapper\Strategy\Filter;
 use ScriptFUSION\Mapper\Strategy\Flatten;
+use ScriptFUSION\Mapper\Strategy\IfElse;
 use ScriptFUSION\Mapper\Strategy\IfExists;
 use ScriptFUSION\Mapper\Strategy\Join;
 use ScriptFUSION\Mapper\Strategy\Merge;
@@ -219,6 +220,47 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame(range(3, 5), (new Mapper)->map($data, new Flatten(new Copy('foo'))));
         self::assertSame([1, 2, 3, 3, 4, 5], (new Mapper)->map($data, (new Flatten(new Copy('foo')))->ignoreKeys()));
+    }
+
+    public function testIfElse()
+    {
+        $data = [1, 3, 5, 6];
+
+        self::assertTrue(
+            (new Mapper)->map(
+                $data,
+                new IfElse(
+                    function ($data) {
+                        foreach ($data as $datum) {
+                            if ($datum <= 0) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    },
+                    true,
+                    false
+                )
+            )
+        );
+
+        self::assertFalse(
+            (new Mapper)->map(
+                $data,
+                new IfElse(
+                    function ($data) {
+                        foreach ($data as $datum) {
+                            if ($datum % 2) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    },
+                    true,
+                    false
+                )
+            )
+        );
     }
 
     public function testIfExists()

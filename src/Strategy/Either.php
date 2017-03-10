@@ -6,7 +6,7 @@ use ScriptFUSION\Mapper\Mapping;
 /**
  * Either uses the primary strategy, if it returns non-null, otherwise delegates to a fallback expression.
  */
-class Either extends IfElse
+class Either extends IfExists
 {
     /**
      * @param Strategy $strategy
@@ -14,6 +14,6 @@ class Either extends IfElse
      */
     public function __construct(Strategy $strategy, $expression)
     {
-        parent::__construct(new Exists($strategy), $strategy, $expression);
+        parent::__construct($strategy, $strategy, $expression);
     }
 }

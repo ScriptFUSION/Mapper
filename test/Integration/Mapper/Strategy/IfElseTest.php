@@ -11,54 +11,43 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testIfElse()
-    {
-        $ifExists = (
-            new IfElse(
-                \Mockery::mock(Strategy::class)
-                    ->shouldReceive('__invoke')
-                    ->andReturn(true, false, null)
-                    ->getMock(),
-                'foo',
-                'bar'
-            )
-        )->setMapper(new Mapper);
+    private $condition;
 
-        self::assertSame('foo', $ifExists([]));
-        self::assertSame('bar', $ifExists([]));
-        self::assertSame('bar', $ifExists([]));
+    public function setUp()
+    {
+        $this->condition = function($data) {
+            return array_key_exists('baz', $data) && $data['baz'] === 'qux';
+        };
     }
 
-    public function testIfExistsElse()
+    public function testIfElse()
     {
-        $ifExists = (
-        new IfElse(
-            new Exists('0->1'),
-            'foo',
-            'bar'
-        )
-        )->setMapper(new Mapper);
+        $ifElse = (new IfElse($this->condition, 'foo', 'bar'))->setMapper(new Mapper);
 
-        self::assertSame('foo', $ifExists([['a', 'b']]));
-        self::assertSame('bar', $ifExists([['a']]));
-        self::assertSame('bar', $ifExists(['a']));
-        self::assertSame('bar', $ifExists([]));
+        self::assertSame('foo', $ifElse(['baz' =>  'qux']));
+        self::assertSame('bar', $ifElse(['baz' => 'quux']));
+        self::assertSame('bar', $ifElse([]));
     }
 
     public function testOnlyIf()
     {
-        $ifElse = (
-            new IfElse(
-                \Mockery::mock(Strategy::class)
-                    ->shouldReceive('__invoke')
-                    ->andReturn(true, false, null)
-                    ->getMock(),
-                'foo'
-            )
-        )->setMapper(new Mapper);
+        $ifElse = (new IfElse($this->condition, 'foo'))->setMapper(new Mapper);
 
-        self::assertSame('foo', $ifElse([]));
+        self::assertSame('foo', $ifElse(['baz' =>  'qux']));
+        self::assertNull($ifElse(['baz' => 'quux']));
         self::assertNull($ifElse([]));
-        self::assertNull($ifElse([]));
+    }
+
+    public function testNonStrict()
+    {
+        $ifElse = (new IfElse(
+            function () {
+                return 1;
+            },
+            'foo',
+            'bar'
+        ))->setMapper(new Mapper);
+
+        self::assertSame('bar', $ifElse([]));
     }
 }
