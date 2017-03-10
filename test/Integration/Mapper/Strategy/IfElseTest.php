@@ -2,11 +2,9 @@
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use ScriptFUSION\Mapper\InvalidReturnException;
+use ScriptFUSION\Mapper\InvalidConditionException;
 use ScriptFUSION\Mapper\Mapper;
-use ScriptFUSION\Mapper\Strategy\Exists;
 use ScriptFUSION\Mapper\Strategy\IfElse;
-use ScriptFUSION\Mapper\Strategy\Strategy;
 
 final class IfElseTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +14,7 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->condition = function($data) {
+        $this->condition = function ($data) {
             return array_key_exists('baz', $data) && $data['baz'] === 'qux';
         };
     }
@@ -41,7 +39,7 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
 
     public function testStrictness()
     {
-        $this->setExpectedException(InvalidReturnException::class);
+        $this->setExpectedException(InvalidConditionException::class);
 
         $ifElse = (new IfElse(
             function () {

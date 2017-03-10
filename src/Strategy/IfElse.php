@@ -1,7 +1,7 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\Mapper\InvalidReturnException;
+use ScriptFUSION\Mapper\InvalidConditionException;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
@@ -38,7 +38,7 @@ class IfElse extends Delegate
      * @param mixed $data
      * @param mixed $context
      *
-     * @throws InvalidReturnException
+     * @throws InvalidConditionException
      *
      * @return mixed
      */
@@ -47,7 +47,7 @@ class IfElse extends Delegate
         $return = call_user_func($this->condition, $data, $context);
 
         if (!is_bool($return)) {
-            throw new InvalidReturnException('Invalid return from condition: must be of type boolean.');
+            throw new InvalidConditionException('Invalid return from condition: must be of type boolean.');
         }
 
         if ($return === true) {

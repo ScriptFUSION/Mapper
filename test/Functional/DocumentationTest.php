@@ -236,6 +236,7 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
                                 return false;
                             }
                         }
+
                         return true;
                     },
                     true,
@@ -254,6 +255,7 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
                                 return false;
                             }
                         }
+
                         return true;
                     },
                     true,
