@@ -1,6 +1,8 @@
 <?php
 namespace ScriptFUSIONTest\Functional;
 
+use ScriptFUSION\Mapper\AnonymousMapping;
+use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Collection;
 use ScriptFUSION\Mapper\Strategy\Context;
@@ -48,5 +50,18 @@ final class KeyPropagationTest extends \PHPUnit_Framework_TestCase
         );
 
         self::assertSame(['bar' => 'bar'], $mapped);
+    }
+
+    /**
+     * Tests that keys are forwarded by CollectionMapper.
+     */
+    public function testCollectionMapperPropagation()
+    {
+        $mapped = (new CollectionMapper)->mapCollection(
+            new \ArrayIterator(['foo' => ['bar']]),
+            new AnonymousMapping([new CopyKey])
+        );
+
+        self::assertSame(['foo' => ['foo']], iterator_to_array($mapped));
     }
 }

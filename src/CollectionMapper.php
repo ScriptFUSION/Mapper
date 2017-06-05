@@ -13,17 +13,17 @@ class CollectionMapper extends Mapper
      *
      * @return \Generator
      *
-     * @throws \Exception
+     * @throws InvalidRecordException A record in the specified collection was not an array type.
      */
     public function mapCollection(\Iterator $collection, Mapping $mapping = null, $context = null)
     {
-        foreach ($collection as $record) {
+        foreach ($collection as $key => $record) {
             if (!is_array($record)) {
-                throw new \Exception('Record must be an array.'); // TODO: Specific exception type.
+                throw new InvalidRecordException('Record must be an array.');
             }
 
-            yield $mapping
-                ? $this->mapMapping($record, $mapping, $context)
+            yield $key => $mapping
+                ? $this->mapMapping($record, $mapping, $context, $key)
                 : $record;
         }
     }

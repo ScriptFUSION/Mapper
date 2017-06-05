@@ -3,6 +3,7 @@ namespace ScriptFUSIONTest\Integration\Mapper;
 
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\CollectionMapper;
+use ScriptFUSION\Mapper\InvalidRecordException;
 
 final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,6 +13,16 @@ final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mapper = new CollectionMapper;
+    }
+
+    /**
+     * Tests that when an invalid collection is specified an exception is thrown.
+     */
+    public function testMapInvalidCollection()
+    {
+        $this->setExpectedException(InvalidRecordException::class);
+
+        $this->mapper->mapCollection(new \ArrayIterator(['foo']))->valid();
     }
 
     /**
@@ -52,5 +63,18 @@ final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
         $mapped = $this->mapper->mapCollection(new \ArrayIterator([[1], [2]]), new AnonymousMapping($record = ['foo']));
 
         self::assertSame([$record, $record], iterator_to_array($mapped));
+    }
+
+    /**
+     * Tests that the keys of a mapped collection are preserved.
+     */
+    public function testCollectionKeysPreserved()
+    {
+        $mapped = $this->mapper->mapCollection(
+            new \ArrayIterator($input = ['foo' => ['bar']]),
+            new AnonymousMapping(['baz'])
+        );
+
+        self::assertSame(['foo' => ['baz']], iterator_to_array($mapped));
     }
 }
