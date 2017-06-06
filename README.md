@@ -368,7 +368,7 @@ $context = ['foo' => 456];
 
 ### CopyKey
 
-Copies the current key from the key context. This strategy requires the key context to be set by another strategy. By default the key context is `null`. Currently only the [collection strategy](#collection) sets a key context.
+Copies the current key from the key context. By default the key context is `null`. Key context may be set by `CollectionMapper` or the [collection](#collection) strategy.
 
 #### Signature
 
