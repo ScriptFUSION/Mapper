@@ -22,26 +22,30 @@ Contents
   1. [Strategies](#strategies)
   1. [Practical example](#practical-example)
   1. [Strategy reference](#strategy-reference)
-      1. [Copy](#copy)
-      1. [CopyContext](#copycontext)
-      1. [CopyKey](#copykey)
-      1. [Callback](#callback)
-      1. [Collection](#collection)
-      1. [Context](#context)
-      1. [Either](#either)
-      1. [Filter](#filter)
-      1. [Flatten](#flatten)
-      1. [IfElse](#ifelse)
-      1. [IfExists](#ifexists)
-      1. [Join](#join)
-      1. [Merge](#merge)
-      1. [TakeFirst](#takefirst)
-      1. [ToList](#tolist)
-      1. [Translate](#translate)
-      1. [TryCatch](#trycatch)
-      1. [Type](#type)
-      1. [Unique](#unique)
-      1. [Walk](#walk)
+      1. [Fetchers](#fetchers)
+          1. [Copy](#copy)
+          1. [CopyContext](#copycontext)
+          1. [CopyKey](#copykey)
+      1. [Augmenters](#augmenters)
+          1. [Callback](#callback)
+          1. [Collection](#collection)
+          1. [Context](#context)
+          1. [Either](#either)
+          1. [Filter](#filter)
+          1. [Flatten](#flatten)
+          1. [IfElse](#ifelse)
+          1. [IfExists](#ifexists)
+          1. [Join](#join)
+          1. [Merge](#merge)
+          1. [TakeFirst](#takefirst)
+          1. [ToList](#tolist)
+          1. [Translate](#translate)
+          1. [TryCatch](#trycatch)
+          1. [Type](#type)
+          1. [Unique](#unique)
+          1. [Walk](#walk)
+      1. [Others](#others)
+          1. [Debug](#debug)
   1. [Requirements](#requirements)
   1. [Limitations](#limitations)
   1. [Testing](#testing)
@@ -307,6 +311,10 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Unique](#unique) &ndash; Creates a collection of unique values by removing duplicates.
  - [Walk](#walk) &ndash; Walks a nested structure to the specified element in the same manner as `Copy`.
 
+#### Others
+
+ - [Debug](#debug) &ndash; Debugs a mapping by breaking the debugger wherever this strategy is inserted.
+
 ### Copy
 
 Copy copies a portion of the input data with support for nested structures.
@@ -329,7 +337,7 @@ $data = [
         'bar' => 123,
     ],
 ];
-	
+
 (new Mapper)->map($data, new Copy('foo'));
 ```
 
@@ -843,7 +851,7 @@ Creates a collection of unique values by removing duplicates.
 Unique(Strategy|Mapping|array|mixed $collection)
 ```
 
- 1. `$collection` &ndash; Expression the maps to an array.
+ 1. `$collection` &ndash; Expression that maps to an array.
 
 #### Example
 
@@ -886,6 +894,20 @@ Walk(Strategy|Mapping|array|mixed $expression, array|string $path)
 
 > 123
 
+### Debug
+
+Debugs a mapping by breaking the debugger wherever this strategy is inserted. The specified expression will be mapped immediately before triggering the breakpoint. The debugger should see the current data, context and mapped expression.
+
+Currently only the [Xdebug][Xdebug] debugger is supported.
+
+#### Signature
+
+```php
+Debug(Strategy|Mapping|array|mixed $expression)
+```
+
+ 1. `$expression` &ndash; Expression to delegate to `Mapper`.
+
 Requirements
 ------------
 
@@ -916,3 +938,5 @@ in this document can be found in `DocumentationTest`.
   [Coverage image]: https://coveralls.io/repos/ScriptFUSION/Mapper/badge.svg "Test coverage"
   [Style]: https://styleci.io/repos/59734709
   [Style image]: https://styleci.io/repos/59734709/shield?style=flat "Code style"
+
+  [Xdebug]: https://xdebug.org
