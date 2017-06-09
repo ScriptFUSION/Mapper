@@ -25,18 +25,24 @@ class Mapper
      */
     public function map(array $record, $expression, $context = null, $key = null)
     {
-        /* Strategy. */
+        // Null or scalar values.
+        if (null === $expression || is_scalar($expression)) {
+            return $expression;
+        }
+
+        // Strategy.
         if ($expression instanceof Strategy) {
             return $this->mapStrategy($record, $expression, $context, $key);
-        } /* Mapping. */
-        elseif ($expression instanceof Mapping) {
+        }
+
+        // Mapping.
+        if ($expression instanceof Mapping) {
             return $this->mapMapping($record, $expression, $context, $key);
-        } /* Mapping fragment. */
-        elseif (is_array($expression)) {
+        }
+
+        // Mapping fragment.
+        if (is_array($expression)) {
             return $this->mapFragment($record, $expression, $context, $key);
-        } /* Null or scalar values. */
-        elseif (null === $expression || is_scalar($expression)) {
-            return $expression;
         }
 
         throw new InvalidExpressionException('Invalid strategy or mapping: "' . get_class($expression) . '".');

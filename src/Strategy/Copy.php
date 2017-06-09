@@ -6,21 +6,9 @@ use ScriptFUSION\ArrayWalker\ArrayWalker;
 /**
  * Copies a portion of input data.
  */
-class Copy implements Strategy
+class Copy extends Delegate
 {
     const PATH_SEPARATOR = '->';
-
-    private $path;
-
-    /**
-     * Initializes this instance with the specified path.
-     *
-     * @param array|string $path Array of path components or string of `->`-delimited components.
-     */
-    public function __construct($path)
-    {
-        $this->path = is_array($path) ? $path : explode(self::PATH_SEPARATOR, $path);
-    }
 
     /**
      * @param mixed $data
@@ -30,8 +18,14 @@ class Copy implements Strategy
      */
     public function __invoke($data, $context = null)
     {
-        if ($this->path && is_array($data)) {
-            return ArrayWalker::walk($data, $this->path);
+        if (!is_array($data)) {
+            return null;
         }
+
+        if (!is_array($path = parent::__invoke($data, $context))) {
+            $path = explode(self::PATH_SEPARATOR, $path);
+        }
+
+        return $path ? ArrayWalker::walk($data, $path) : null;
     }
 }

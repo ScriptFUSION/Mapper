@@ -1,45 +1,63 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ScriptFUSION\Mapper\Strategy\Copy;
+use ScriptFUSIONTest\MockFactory;
 
 final class CopyTest extends \PHPUnit_Framework_TestCase
 {
+    use MockeryPHPUnitIntegration;
+
+    public function testNullRecord()
+    {
+        $copy = self::createStrategy(0);
+
+        self::assertNull($copy(null));
+    }
+
+    public function testNullPath()
+    {
+        $copy = self::createStrategy(null);
+
+        self::assertNull($copy([]));
+    }
+
     public function testFalsyPathComponentString()
     {
-        $copy = new Copy('0');
+        $copy = self::createStrategy('0');
         self::assertSame('foo', $copy(['foo']));
 
-        $copy = new Copy('0->1');
+        $copy = self::createStrategy('0->1');
         self::assertSame('bar', $copy([['foo', 'bar']]));
     }
 
     public function testFalsyPathComponentArray()
     {
-        $copy = new Copy([0]);
+        $copy = self::createStrategy([0]);
         self::assertSame('foo', $copy(['foo']));
 
-        $copy = new Copy([0, 1]);
+        $copy = self::createStrategy([0, 1]);
         self::assertSame('bar', $copy([['foo', 'bar']]));
     }
 
     public function testEmptyPathString()
     {
-        $copy = new Copy('');
+        $copy = self::createStrategy('');
 
         self::assertNull($copy(['foo']));
     }
 
     public function testEmptyPathArray()
     {
-        $copy = new Copy([]);
+        $copy = self::createStrategy([]);
 
         self::assertNull($copy(['foo']));
     }
 
     public function testNonexistentPathString()
     {
-        $copy = new Copy('foo->bar');
+        $copy = self::createStrategy('foo->bar');
 
         self::assertNull($copy([]));
         self::assertNull($copy(['foo' => ['bar']]));
@@ -48,10 +66,15 @@ final class CopyTest extends \PHPUnit_Framework_TestCase
 
     public function testNonexistentPathArray()
     {
-        $copy = new Copy(['foo', 'bar']);
+        $copy = self::createStrategy(['foo', 'bar']);
 
         self::assertNull($copy([]));
         self::assertNull($copy(['foo' => ['bar']]));
         self::assertNull($copy(['foo' => 'bar']));
+    }
+
+    private static function createStrategy($path)
+    {
+        return (new Copy($path))->setMapper(MockFactory::mockMapper($path));
     }
 }

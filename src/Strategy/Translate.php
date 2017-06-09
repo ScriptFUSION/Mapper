@@ -5,6 +5,8 @@ use ScriptFUSION\Mapper\Mapping;
 
 /**
  * Translates a value using a mapping.
+ *
+ * @deprecated Use Walk instead.
  */
 class Translate extends Decorator
 {

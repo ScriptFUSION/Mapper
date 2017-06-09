@@ -1,6 +1,8 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+use ScriptFUSION\Mapper\Mapping;
+
 /**
  * Copies a portion of context data.
  */
@@ -11,7 +13,8 @@ class CopyContext extends Copy
     /**
      * {@inheritdoc}
      *
-     * @param array|string $path Array of path components or string of `->`-delimited components.
+     * @param Strategy|Mapping|array|mixed $path Array of path components, string of `->`-delimited path components or
+     *     a strategy or mapping resolving to such an expression.
      */
     public function __construct($path = null)
     {

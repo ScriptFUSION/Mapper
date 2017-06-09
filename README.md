@@ -317,17 +317,17 @@ The following strategies ship with Mapper and provide a suite of commonly used f
 
 ### Copy
 
-Copy copies a portion of the input data with support for nested structures.
+Copies a portion of the input data according to the specified path. Supports traversing nested arrays.
 
-Copy is probably the most common strategy whether used by itself or injected into other strategies.
+`Copy` is probably the most common strategy whether used by itself or injected into other strategies.
 
 #### Signature
 
 ```php
-Copy(array|string $path)
+Copy(Strategy|Mapping|array|mixed $path)
 ```
 
- 1. `$path` &ndash; Array of path components or string of  `->`-delimited components.
+ 1. `$path` &ndash; Array of path components, string of `->`-delimited path components or a strategy or mapping resolving to such an expression.
 
 #### Example
 
@@ -351,6 +351,23 @@ $data = [
 
 > 123
 
+#### Path resolver example
+
+Since the path can be derived from other strategies we could nest `Copy` instances to look up values referenced by other keys.
+
+```php
+(new Mapper)->map(
+    [
+        'foo' => 'bar',
+        'bar' => 'baz',
+        'baz' => 'qux',
+    ],
+    new Copy(new Copy(new Copy('foo')))
+);
+```
+
+> 'qux'
+
 ### CopyContext
 
 Copies a portion of context data; works exactly the same way as `Copy` in all other respects.
@@ -358,10 +375,11 @@ Copies a portion of context data; works exactly the same way as `Copy` in all ot
 #### Signature
 
 ```php
-CopyContext(array|string $path)
+CopyContext(Strategy|Mapping|array|mixed $path)
 ```
 
- 1. `$path` &ndash; Array of path components or string of  `->`-delimited components.
+ 1. `$path` &ndash; Array of path components, string of `->`-delimited path components or a strategy or mapping resolving to such an expression.
+
 
 #### Example
 
@@ -871,11 +889,11 @@ Walks a nested structure to the specified element in the same manner as [`Copy`]
 #### Signature
 
 ```php
-Walk(Strategy|Mapping|array|mixed $expression, array|string $path)
+Walk(Strategy|Mapping|array|mixed $expression, Strategy|Mapping|array|mixed $path)
 ```
 
- 1. `$expression` &ndash; Expression.
- 2. `$path` Array of path components or string of  `->`-delimited components.
+ 1. `$expression` &ndash; Expression to walk.
+ 2. `$path` &ndash; Array of path components, string of `->`-delimited path components or a strategy or mapping resolving to such an expression.
 
 #### Example
 

@@ -100,6 +100,21 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         self::assertSame($bar, (new Mapper)->map($data, new Copy(['foo', 'bar'])));
     }
 
+    public function testNestedCopy()
+    {
+        self::assertSame(
+            'qux',
+            (new Mapper)->map(
+                [
+                    'foo' => 'bar',
+                    'bar' => 'baz',
+                    'baz' => 'qux',
+                ],
+                new Copy(new Copy(new Copy('foo')))
+            )
+        );
+    }
+
     public function testCopyContext()
     {
         $data = ['foo' => 123];

@@ -15,6 +15,14 @@ namespace ScriptFUSIONTest\Integration\Mapper\Strategy {
         }
 
         /**
+         * Tests that the strategy can be created with no arguments.
+         */
+        public function testNoArguments()
+        {
+            new Debug;
+        }
+
+        /**
          * Tests that expressions are delegated to Mapper.
          */
         public function testDelegation()
