@@ -1,7 +1,6 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
@@ -9,10 +8,7 @@ use ScriptFUSION\Mapper\Mapping;
  */
 class Walk extends Delegate
 {
-    /**
-     * @var Copy
-     */
-    private $copy;
+    private $path;
 
     /**
      * @param Strategy|Mapping|array|mixed $expression Expression to walk.
@@ -23,18 +19,13 @@ class Walk extends Delegate
     {
         parent::__construct($expression);
 
-        $this->copy = new Copy($path);
+        $this->path = $path;
     }
 
     public function __invoke($data, $context = null)
     {
-        return call_user_func($this->copy, parent::__invoke($data, $context), $context);
-    }
+        $copy = (new Copy($this->delegate($this->path, $data, $context)))->setMapper($this->getMapper());
 
-    public function setMapper(Mapper $mapper)
-    {
-        $this->copy->setMapper($mapper);
-
-        return parent::setMapper($mapper);
+        return $copy(parent::__invoke($data, $context), $context);
     }
 }
