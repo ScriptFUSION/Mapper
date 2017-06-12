@@ -39,11 +39,9 @@ Contents
           1. [Merge](#merge)
           1. [TakeFirst](#takefirst)
           1. [ToList](#tolist)
-          1. [Translate](#translate)
           1. [TryCatch](#trycatch)
           1. [Type](#type)
           1. [Unique](#unique)
-          1. [Walk](#walk)
       1. [Others](#others)
           1. [Debug](#debug)
   1. [Requirements](#requirements)
@@ -287,7 +285,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
 
 #### Fetchers
 
- - [Copy](#copy) &ndash; Copies a portion of input data.
+ - [Copy](#copy) &ndash; Copies a portion of input data, or specified data, according to a lookup path.
  - [CopyContext](#copycontext) &ndash; Copies a portion of context data.
  - [CopyKey](#copykey) &ndash; Copies the current key.
 
@@ -305,11 +303,9 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
- - [Translate](#translate) &ndash; Translates a value using a mapping.
  - [TryCatch](#trycatch) &ndash; Tries the primary strategy and falls back to an expression if an exception is thrown.
  - [Type](#type) &ndash; Casts data to the specified type.
  - [Unique](#unique) &ndash; Creates a collection of unique values by removing duplicates.
- - [Walk](#walk) &ndash; Walks a nested structure to the specified element in the same manner as `Copy`.
 
 #### Others
 
@@ -317,17 +313,18 @@ The following strategies ship with Mapper and provide a suite of commonly used f
 
 ### Copy
 
-Copies a portion of the input data according to the specified path. Supports traversing nested arrays.
+Copies a portion of input data, or specified data, according to a lookup path. Supports traversing nested arrays.
 
-`Copy` is probably the most common strategy whether used by itself or injected into other strategies.
+`Copy` is probably the most common strategy whether used by itself or injected into other strategies. Since both its *path* and *data* parameters can be mapped expressions it is highly versatile and can be combined with other strategies, or even itself, to produce powerful expressions.
 
 #### Signature
 
 ```php
-Copy(Strategy|Mapping|array|mixed $path)
+Copy(Strategy|Mapping|array|mixed $path, Strategy|Mapping|array|mixed $data)
 ```
 
  1. `$path` &ndash; Array of path components, string of `->`-delimited path components or a strategy or mapping resolving to such an expression.
+ 2. `$data` &ndash; Optional. Array data or an expression that resolves to an array to be copied instead of input data.
 
 #### Example
 
@@ -351,9 +348,22 @@ $data = [
 
 > 123
 
+#### Specified data example
+
+When data is specified in the second parameter it is used instead of the data sent from `Mapper`.
+
+```php
+(new Mapper)->map(
+    ['foo' => 'bar'],
+    new Copy('foo', ['foo' => 'baz'])
+);
+```
+
+> 'baz'
+
 #### Path resolver example
 
-Since the path can be derived from other strategies we could nest `Copy` instances to look up values referenced by other keys.
+Since the path can be derived from other strategies we can nest `Copy` instances to look up values referenced by other keys.
 
 ```php
 (new Mapper)->map(
@@ -772,33 +782,6 @@ ToList(Strategy|Mapping|array|mixed $expression)
 
 > ['bar']
 
-### Translate
-
-Translates a value using a mapping. The mapping may derived from any valid expression.
-
-#### Signature
-
-```php
-Translate(Strategy $value, Strategy|Mapping|array|mixed $mapping)
-```
-
- 1. `$value` &ndash; Value used to match against an entry in the mapping.
- 2. `$mapping` &ndash; Mapping that specifies what the value may be translated to.
-
-#### Example
-
-```php
-(new Mapper)->map(
-    ['foo' => 'foo'],
-    new Translate(
-        new Copy('foo'),
-        ['foo' => 'bar']
-    )
-);
-```
-
-> 'bar'
-
 ### TryCatch
 
 Tries the primary strategy and falls back to an expression if an exception is thrown. The thrown exception is passed to the specified exception handler. The handler should throw an exception if it does not expect the exception type it receives.
@@ -881,36 +864,6 @@ Unique(Strategy|Mapping|array|mixed $collection)
 ```
 
 > [1, 2, 3, 4, 5]
-
-### Walk
-
-Walks a nested structure to the specified element in the same manner as [`Copy`](#copy).
-
-#### Signature
-
-```php
-Walk(Strategy|Mapping|array|mixed $expression, Strategy|Mapping|array|mixed $path)
-```
-
- 1. `$expression` &ndash; Expression to walk.
- 2. `$path` &ndash; Array of path components, string of `->`-delimited path components or a strategy or mapping resolving to such an expression.
-
-#### Example
-
-```php
-(new Mapper)->map(
-    [
-        'foo' => [
-            'bar' => [
-                'baz' => 123,
-            ],
-        ],
-    ],
-    new Walk(new Copy('foo'), 'bar->baz')
-)
-```
-
-> 123
 
 ### Debug
 

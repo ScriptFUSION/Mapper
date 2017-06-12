@@ -9,20 +9,6 @@ final class CopyTest extends \PHPUnit_Framework_TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testNullRecord()
-    {
-        $copy = self::createStrategy(0);
-
-        self::assertNull($copy(null));
-    }
-
-    public function testNullPath()
-    {
-        $copy = self::createStrategy(null);
-
-        self::assertNull($copy([]));
-    }
-
     public function testFalsyPathComponentString()
     {
         $copy = self::createStrategy('0');
@@ -39,6 +25,20 @@ final class CopyTest extends \PHPUnit_Framework_TestCase
 
         $copy = self::createStrategy([0, 1]);
         self::assertSame('bar', $copy([['foo', 'bar']]));
+    }
+
+    public function testNullRecord()
+    {
+        $copy = self::createStrategy(0);
+
+        self::assertNull($copy(null));
+    }
+
+    public function testNullPath()
+    {
+        $copy = self::createStrategy(null);
+
+        self::assertNull($copy([]));
     }
 
     public function testEmptyPathString()

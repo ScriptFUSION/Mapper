@@ -18,11 +18,9 @@ use ScriptFUSION\Mapper\Strategy\Join;
 use ScriptFUSION\Mapper\Strategy\Merge;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSION\Mapper\Strategy\ToList;
-use ScriptFUSION\Mapper\Strategy\Translate;
 use ScriptFUSION\Mapper\Strategy\TryCatch;
 use ScriptFUSION\Mapper\Strategy\Type;
 use ScriptFUSION\Mapper\Strategy\Unique;
-use ScriptFUSION\Mapper\Strategy\Walk;
 use ScriptFUSIONTest\Fixture\BarBucketAddressToAddresesMapping;
 use ScriptFUSIONTest\Fixture\FooBookAddressToAddresesMapping;
 use ScriptFUSIONTest\Fixture\FooToBarMapping;
@@ -98,6 +96,17 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         self::assertSame($foo, (new Mapper)->map($data, new Copy('foo')));
         self::assertSame($bar, (new Mapper)->map($data, new Copy('foo->bar')));
         self::assertSame($bar, (new Mapper)->map($data, new Copy(['foo', 'bar'])));
+    }
+
+    public function testSpecifiedDataCopy()
+    {
+        self::assertSame(
+            'baz',
+            (new Mapper)->map(
+                ['foo' => 'bar'],
+                new Copy('foo', ['foo' => 'baz'])
+            )
+        );
     }
 
     public function testNestedCopy()
@@ -352,23 +361,6 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
                     ['foo' => array_merge(range(1, 3), range(3, 5))],
                     new Unique(new Copy('foo'))
                 )
-            )
-        );
-    }
-
-    public function testWalk()
-    {
-        self::assertSame(
-            $baz = 123,
-            (new Mapper)->map(
-                [
-                    'foo' => [
-                        'bar' => [
-                            'baz' => $baz,
-                        ],
-                    ],
-                ],
-                new Walk(new Copy('foo'), 'bar->baz')
             )
         );
     }
