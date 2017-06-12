@@ -3,18 +3,22 @@ namespace ScriptFUSION\Mapper;
 
 trait MapperAwareTrait
 {
-    /** @var Mapper */
+    use KeyAwareTrait;
+
+    /**
+     * @var Mapper
+     */
     private $mapper;
+
+    protected function getMapper()
+    {
+        return $this->mapper;
+    }
 
     public function setMapper(Mapper $mapper)
     {
         $this->mapper = $mapper;
 
         return $this;
-    }
-
-    protected function getMapper()
-    {
-        return $this->mapper;
     }
 }

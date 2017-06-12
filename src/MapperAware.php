@@ -1,7 +1,7 @@
 <?php
 namespace ScriptFUSION\Mapper;
 
-interface MapperAware
+interface MapperAware extends KeyAware
 {
     /**
      * Sets the mapper to the specified mapper instance.

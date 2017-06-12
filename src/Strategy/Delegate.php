@@ -1,15 +1,13 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
-use ScriptFUSION\Mapper\KeyAware;
-use ScriptFUSION\Mapper\KeyAwareTrait;
 use ScriptFUSION\Mapper\MapperAware;
 use ScriptFUSION\Mapper\MapperAwareTrait;
 use ScriptFUSION\Mapper\Mapping;
 
-abstract class Delegate implements Strategy, MapperAware, KeyAware
+abstract class Delegate implements Strategy, MapperAware
 {
-    use MapperAwareTrait, KeyAwareTrait;
+    use MapperAwareTrait;
 
     private $expression;
 
