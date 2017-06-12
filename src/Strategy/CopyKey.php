@@ -11,7 +11,7 @@ class CopyKey implements Strategy, KeyAware
 {
     use KeyAwareTrait;
 
-    public function __invoke($data, $context = null)
+    public function __invoke($record, $context = null)
     {
         return $this->key;
     }

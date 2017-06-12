@@ -23,7 +23,7 @@ class CopyContext extends Copy
         $this->walk = (bool)$path;
     }
 
-    public function __invoke($data, $context = null)
+    public function __invoke($record, $context = null)
     {
         if ($this->walk) {
             return parent::__invoke($context);

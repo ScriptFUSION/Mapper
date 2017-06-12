@@ -312,20 +312,6 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testTranslate()
-    {
-        self::assertSame(
-            'bar',
-            (new Mapper)->map(
-                ['foo' => 'foo'],
-                new Translate(
-                    new Copy('foo'),
-                    ['foo' => 'bar']
-                )
-            )
-        );
-    }
-
     public function testTryCatch()
     {
         self::assertSame(
