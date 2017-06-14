@@ -2,6 +2,7 @@
 namespace ScriptFUSIONTest\Functional;
 
 use ScriptFUSION\Mapper\DataType;
+use ScriptFUSION\Mapper\Expression;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Callback;
 use ScriptFUSION\Mapper\Strategy\Collection;
@@ -16,6 +17,7 @@ use ScriptFUSION\Mapper\Strategy\IfElse;
 use ScriptFUSION\Mapper\Strategy\IfExists;
 use ScriptFUSION\Mapper\Strategy\Join;
 use ScriptFUSION\Mapper\Strategy\Merge;
+use ScriptFUSION\Mapper\Strategy\Replace;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSION\Mapper\Strategy\ToList;
 use ScriptFUSION\Mapper\Strategy\TryCatch;
@@ -291,6 +293,21 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
                     'bar' => range(3, 5),
                 ],
                 new Merge(new Copy('foo'), new Copy('bar'))
+            )
+        );
+    }
+
+    public function testReplace()
+    {
+        self::assertSame(
+            'こんにちは世界',
+            (new Mapper)->map(
+                ['Hello World'],
+                new Replace(
+                    new Copy(0),
+                    ['Hello', new Expression('[\h*world$]i')],
+                    ['こんにちは', '世界']
+                )
             )
         );
     }

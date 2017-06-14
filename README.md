@@ -37,6 +37,7 @@ Contents
           1. [IfExists](#ifexists)
           1. [Join](#join)
           1. [Merge](#merge)
+          1. [Replace](#replace)
           1. [TakeFirst](#takefirst)
           1. [ToList](#tolist)
           1. [TryCatch](#trycatch)
@@ -301,6 +302,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [IfExists](#ifexists) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
  - [Join](#join) &ndash; Joins sub-string expressions together with a glue string.
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
+ - [Replace](#replace) &ndash; Replaces one or more substrings.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
  - [TryCatch](#trycatch) &ndash; Tries the primary strategy and falls back to an expression if an exception is thrown.
@@ -313,9 +315,9 @@ The following strategies ship with Mapper and provide a suite of commonly used f
 
 ### Copy
 
-Copies a portion of input data, or specified data, according to a lookup path. Supports traversing nested arrays.
+Copies a portion of input data, or specified data, according to a lookup path. Supports traversing nested arrays. By default the current record is used as the data source but if the *data* parameter is specified it is used instead.
 
-`Copy` is probably the most common strategy whether used by itself or injected into other strategies. Since both its *path* and *data* parameters can be mapped expressions it is highly versatile and can be combined with other strategies, or even itself, to produce powerful expressions.
+`Copy` is probably the most common strategy whether used by itself or injected into other strategies. Since both its *path* and *data* parameters can be mapped expressions it is highly versatile and can be combined with other strategies, or even itself, to produce powerful transformations.
 
 #### Signature
 
@@ -348,7 +350,7 @@ $data = [
 
 > 123
 
-#### Specified data example
+#### Data override example
 
 When data is specified in the second parameter it is used instead of the data sent from `Mapper`.
 
@@ -361,7 +363,7 @@ When data is specified in the second parameter it is used instead of the data se
 
 > 'baz'
 
-#### Path resolver example
+#### Recursive path resolver example
 
 Since the path can be derived from other strategies we can nest `Copy` instances to look up values referenced by other keys.
 
@@ -728,6 +730,39 @@ Merge(Strategy|Mapping|array|mixed $first, Strategy|Mapping|array|mixed $second)
 ```
 
 > [1, 2, 3, 3, 4, 5]
+
+### Replace
+
+Replaces all occurrences one or more substrings.
+
+Any number of searches and replacements can be specified. Searches and replacements are parsed in pairs. If no replacements are specified, all matches are removed instead of replaced. If fewer replacements than searches are specified, the last replacement will be used for the remaining searches. If more replacements than searches are specified, the extra replacements are ignored.
+
+Searches can be specified as either string literals or wrapped in an `Expression` and treated as a regular expression. `Expression` and string searches can be mixed as desired. Regular expression replacements can reference sub-matches, e.g. `$1`.
+
+#### Signature
+
+```php
+Replace(Strategy|Mapping|array|mixed $expression, string|Expression|array $searches, string|string[]|null $replacements)
+```
+
+ 1. `$expression` &ndash; Expression to search in.
+ 2. `$searches` &ndash; Search string(s).
+ 3. `$replacements` &ndash; Optional. Replacement string(s).
+
+#### Example
+
+```php
+(new Mapper)->map(
+    ['Hello World'],
+    new Replace(
+        new Copy(0),
+        ['Hello', new Expression('[\h*world$]i')],
+        ['こんにちは', '世界']
+    )
+)
+```
+
+> 'こんにちは世界'
 
 ### TakeFirst
 
