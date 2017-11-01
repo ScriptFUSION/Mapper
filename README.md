@@ -733,11 +733,11 @@ Merge(Strategy|Mapping|array|mixed $first, Strategy|Mapping|array|mixed $second)
 
 ### Replace
 
-Replaces all occurrences one or more substrings.
+Replaces all occurrences of one or more substrings.
 
 Any number of searches and replacements can be specified. Searches and replacements are parsed in pairs. If no replacements are specified, all matches are removed instead of replaced. If fewer replacements than searches are specified, the last replacement will be used for the remaining searches. If more replacements than searches are specified, the extra replacements are ignored.
 
-Searches can be specified as either string literals or wrapped in an `Expression` and treated as a regular expression. `Expression` and string searches can be mixed as desired. Regular expression replacements can reference sub-matches, e.g. `$1`.
+Searches can be specified as either string literals or wrapped in an `Expression` and treated as a regular expression. `Expression` and string searches can be mixed as desired. Regular expression replacements can reference sub-matches, e.g. `$1` specifies the first capturing group.
 
 #### Signature
 
@@ -830,7 +830,7 @@ TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $ex
 ```
 
  1. `$strategy` &ndash; Primary strategy.
- 2. `$handler` &ndash; Exception handler that receives the thrown exception as its first argument.
+ 2. `$handler` &ndash; Exception handler that receives the thrown exception as its first argument and data as its second.
  3. `$expression` &ndash; Fallback expression.
 
 #### Examples
@@ -844,7 +844,7 @@ TryCatch(Strategy $strategy, callable $handler, Strategy|Mapping|array|mixed $ex
                 throw new \DomainException;
             }
         ),
-        function (\Exception $exception) {
+        function (\Exception $exception, array $data) {
             if (!$exception instanceof \DomainException) {
                 throw $exception;
             }

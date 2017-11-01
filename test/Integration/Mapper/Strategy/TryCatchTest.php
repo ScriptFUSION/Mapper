@@ -11,7 +11,7 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->callback = new Callback(function ($data) {
+        $this->callback = new Callback(function (array $data) {
             if ($data[0] instanceof \Exception) {
                 throw $data[0];
             }
@@ -26,9 +26,11 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
         $tryCatch = (
             new TryCatch(
                 $this->callback,
-                function (\Exception $e) {
-                    if (!$e instanceof \DomainException) {
-                        throw $e;
+                function (\Exception $exception, array $data) {
+                    self::assertNotEmpty($data);
+
+                    if (!$exception instanceof \DomainException) {
+                        throw $exception;
                     }
                 },
                 $fallback = 'bar'
@@ -49,16 +51,16 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
             new TryCatch(
                 new TryCatch(
                     $this->callback,
-                    function (\Exception $e) {
-                        if (!$e instanceof \DomainException) {
-                            throw $e;
+                    function (\Exception $exception) {
+                        if (!$exception instanceof \DomainException) {
+                            throw $exception;
                         }
                     },
                     $innerFallback = 'bar'
                 ),
-                function (\Exception $e) {
-                    if (!$e instanceof \LogicException) {
-                        throw $e;
+                function (\Exception $exception) {
+                    if (!$exception instanceof \LogicException) {
+                        throw $exception;
                     }
                 },
                 $outerFallback = 'baz'

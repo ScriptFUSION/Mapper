@@ -32,7 +32,7 @@ class TryCatch extends Decorator
         try {
             return parent::__invoke($data, $context);
         } catch (\Exception $exception) {
-            call_user_func($this->handler, $exception);
+            call_user_func($this->handler, $exception, $data);
 
             return $this->delegate($this->expression, $data, $context);
         }

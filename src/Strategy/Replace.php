@@ -5,7 +5,7 @@ use ScriptFUSION\Mapper\Expression;
 use ScriptFUSION\Mapper\Mapping;
 
 /**
- * Replaces one or more substrings.
+ * Replaces all occurrences of one or more substrings.
  */
 class Replace extends Delegate
 {
