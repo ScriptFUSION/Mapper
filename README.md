@@ -682,7 +682,7 @@ $data = ['foo' => 'foo'];
 
 ### Join
 
-Joins sub-string expressions together with a glue string.
+Joins expressions together with a glue string.
 
 #### Signature
 
@@ -691,7 +691,7 @@ Join(string $glue, array ...$expressions)
 ```
 
  1. `$glue` &ndash; Glue.
- 2. `$expressions` &ndash; Sub-string expressions.
+ 2. `$expressions` &ndash; Expressions to join or a single expression that resolves to an array to join.
 
 #### Example
 
@@ -703,6 +703,15 @@ Join(string $glue, array ...$expressions)
 ```
 
 > 'foo-bar'
+
+```php
+(new Mapper)->map(
+    ['foo' => ['bar', 'baz']],
+    new Join('-', new Copy('foo'))
+);
+```
+
+> 'bar-baz'
 
 ### Merge
 

@@ -281,6 +281,14 @@ final class DocumentationTest extends \PHPUnit_Framework_TestCase
                 new Join('-', new Copy('foo'), 'bar')
             )
         );
+
+        self::assertSame(
+            'bar-baz',
+            (new Mapper)->map(
+                ['foo' => ['bar', 'baz']],
+                new Join('-', new Copy('foo'))
+            )
+        );
     }
 
     public function testMerge()
