@@ -16,12 +16,12 @@ class Copy extends Delegate
     /**
      * Initializes this instance with the specified path. If data is specified it is always used instead of input data.
      *
-     * @param Strategy|Mapping|array|mixed $path Array of path components, string of `->`-delimited path components or
-     *     a strategy or mapping resolving to such an expression.
+     * @param Strategy|Mapping|array|mixed $path Optional. Array of path components, string of `->`-delimited path
+     *     components or a strategy or mapping resolving to such an expression.
      * @param Strategy|Mapping|array|mixed $data Optional. Array data or an expression that resolves to an array to be
      *     copied instead of input data.
      */
-    public function __construct($path, $data = null)
+    public function __construct($path = null, $data = null)
     {
         parent::__construct($path);
 
@@ -43,6 +43,10 @@ class Copy extends Delegate
 
         // Resolve the path expression. Path will always be an array after this block.
         if (!is_array($path = parent::__invoke($record, $context))) {
+            if ($path === null) {
+                return $record;
+            }
+
             // If it's not an array treat it as a delimited string; implicitly casts other scalar types.
             $path = explode(self::PATH_SEPARATOR, $path);
         }

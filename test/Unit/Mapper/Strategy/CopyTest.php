@@ -34,11 +34,14 @@ final class CopyTest extends \PHPUnit_Framework_TestCase
         self::assertNull($copy(null));
     }
 
+    /**
+     * Tests that when a null path is specified, the record is returned verbatim.
+     */
     public function testNullPath()
     {
         $copy = self::createStrategy(null);
 
-        self::assertNull($copy([]));
+        self::assertSame($foo = ['foo'], $copy($foo));
     }
 
     public function testEmptyPathString()
