@@ -6,12 +6,12 @@ use Eloquent\Enumeration\AbstractEnumeration;
 /**
  * Specifies a PHP data type.
  *
- * @method static BOOLEAN()
- * @method static INTEGER()
- * @method static FLOAT()
- * @method static STRING()
- * @method static MAP()
- * @method static OBJECT()
+ * @method static self BOOLEAN
+ * @method static self INTEGER
+ * @method static self FLOAT
+ * @method static self STRING
+ * @method static self MAP
+ * @method static self OBJECT
  */
 final class DataType extends AbstractEnumeration
 {
