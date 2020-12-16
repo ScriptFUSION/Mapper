@@ -2,17 +2,18 @@
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\ToList;
 use ScriptFUSIONTest\MockFactory;
 
-final class ToListTest extends \PHPUnit_Framework_TestCase
+final class ToListTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /** @var ToList */
     private $toList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->toList = new ToList(null);
     }

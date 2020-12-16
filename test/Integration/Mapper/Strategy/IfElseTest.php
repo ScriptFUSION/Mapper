@@ -1,15 +1,16 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\InvalidConditionException;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\IfElse;
 
-final class IfElseTest extends \PHPUnit_Framework_TestCase
+final class IfElseTest extends TestCase
 {
     private $condition;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->condition = function ($data) {
             return array_key_exists('baz', $data) && $data['baz'] === 'qux';
@@ -36,7 +37,7 @@ final class IfElseTest extends \PHPUnit_Framework_TestCase
 
     public function testStrictness()
     {
-        $this->setExpectedException(InvalidConditionException::class);
+        $this->expectException(InvalidConditionException::class);
 
         $ifElse = (new IfElse(
             function () {

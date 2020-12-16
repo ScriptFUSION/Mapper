@@ -1,9 +1,10 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\CopyKey;
 
-final class CopyKeyTest extends \PHPUnit_Framework_TestCase
+final class CopyKeyTest extends TestCase
 {
     public function testDefault()
     {

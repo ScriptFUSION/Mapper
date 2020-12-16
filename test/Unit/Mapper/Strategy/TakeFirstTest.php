@@ -2,10 +2,11 @@
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSIONTest\MockFactory;
 
-final class TakeFirstTest extends \PHPUnit_Framework_TestCase
+final class TakeFirstTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

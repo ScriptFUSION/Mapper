@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Merge;
 
-final class MergeTest extends \PHPUnit_Framework_TestCase
+final class MergeTest extends TestCase
 {
     public function test()
     {

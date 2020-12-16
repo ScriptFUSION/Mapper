@@ -1,11 +1,12 @@
 <?php
 namespace ScriptFUSIONTest\Functional;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Merge;
 
-final class StrategyBasedMappingTest extends \PHPUnit_Framework_TestCase
+final class StrategyBasedMappingTest extends TestCase
 {
     public function test()
     {

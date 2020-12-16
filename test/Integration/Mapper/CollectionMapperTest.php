@@ -1,16 +1,17 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\InvalidRecordException;
 
-final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
+final class CollectionMapperTest extends TestCase
 {
     /** @var CollectionMapper */
     private $mapper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mapper = new CollectionMapper;
     }
@@ -20,7 +21,7 @@ final class CollectionMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testMapInvalidCollection()
     {
-        $this->setExpectedException(InvalidRecordException::class);
+        $this->expectException(InvalidRecordException::class);
 
         $this->mapper->mapCollection(new \ArrayIterator(['foo']))->valid();
     }

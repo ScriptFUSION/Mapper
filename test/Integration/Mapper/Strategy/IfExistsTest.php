@@ -2,11 +2,12 @@
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\IfExists;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 
-final class IfExistsTest extends \PHPUnit_Framework_TestCase
+final class IfExistsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSIONTest\MapperAwareStub;
 
-final class MapperAwareTraitTest extends \PHPUnit_Framework_TestCase
+final class MapperAwareTraitTest extends TestCase
 {
     public function testGetMapper()
     {

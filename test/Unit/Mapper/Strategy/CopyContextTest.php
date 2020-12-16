@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\CopyContext;
 use ScriptFUSIONTest\MockFactory;
 
-final class CopyContextTest extends \PHPUnit_Framework_TestCase
+final class CopyContextTest extends TestCase
 {
     public function testNoPath()
     {

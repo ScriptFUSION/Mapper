@@ -1,12 +1,13 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\InvalidMappingException;
 use ScriptFUSION\Mapper\Mapping;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 
-final class MappingTest extends \PHPUnit_Framework_TestCase
+final class MappingTest extends TestCase
 {
     public function testArrayBasedMapping()
     {
@@ -26,7 +27,7 @@ final class MappingTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidMapping()
     {
-        $this->setExpectedException(InvalidMappingException::class);
+        $this->expectException(InvalidMappingException::class);
 
         new AnonymousMapping(\Mockery::mock(Mapping::class));
     }

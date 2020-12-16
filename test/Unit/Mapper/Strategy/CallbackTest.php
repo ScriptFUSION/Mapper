@@ -1,9 +1,10 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\Callback;
 
-final class CallbackTest extends \PHPUnit_Framework_TestCase
+final class CallbackTest extends TestCase
 {
     public function test()
     {

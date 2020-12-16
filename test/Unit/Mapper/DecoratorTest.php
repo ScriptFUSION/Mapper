@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 use ScriptFUSIONTest\DecoratorStub;
 
-final class DecoratorTest extends \PHPUnit_Framework_TestCase
+final class DecoratorTest extends TestCase
 {
     public function testGetStrategy()
     {

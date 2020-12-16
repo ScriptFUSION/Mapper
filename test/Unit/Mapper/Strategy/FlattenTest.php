@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\Flatten;
 use ScriptFUSIONTest\MockFactory;
 
-final class FlattenTest extends \PHPUnit_Framework_TestCase
+final class FlattenTest extends TestCase
 {
     public function testValues()
     {

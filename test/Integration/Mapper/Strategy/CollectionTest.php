@@ -1,12 +1,13 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Collection;
 use ScriptFUSION\Mapper\Strategy\CopyContext;
 use ScriptFUSIONTest\MockFactory;
 
-final class CollectionTest extends \PHPUnit_Framework_TestCase
+final class CollectionTest extends TestCase
 {
     public function testNull()
     {

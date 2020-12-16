@@ -1,15 +1,16 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy {
 
+    use PHPUnit\Framework\TestCase;
     use ScriptFUSION\Mapper\Mapper;
     use ScriptFUSION\Mapper\Strategy\Copy;
     use ScriptFUSION\Mapper\Strategy\Debug;
 
-    final class DebugTest extends \PHPUnit_Framework_TestCase
+    final class DebugTest extends TestCase
     {
         public static $debugged;
 
-        protected function setUp()
+        protected function setUp(): void
         {
             self::$debugged = false;
         }
@@ -19,7 +20,7 @@ namespace ScriptFUSIONTest\Integration\Mapper\Strategy {
          */
         public function testNoArguments()
         {
-            new Debug;
+            self::assertInstanceOf(Debug::class, new Debug);
         }
 
         /**

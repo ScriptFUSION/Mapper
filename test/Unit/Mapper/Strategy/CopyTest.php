@@ -2,10 +2,11 @@
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Strategy\Copy;
 use ScriptFUSIONTest\MockFactory;
 
-final class CopyTest extends \PHPUnit_Framework_TestCase
+final class CopyTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

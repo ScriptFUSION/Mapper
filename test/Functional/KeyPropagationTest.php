@@ -1,6 +1,7 @@
 <?php
 namespace ScriptFUSIONTest\Functional;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\AnonymousMapping;
 use ScriptFUSION\Mapper\CollectionMapper;
 use ScriptFUSION\Mapper\Mapper;
@@ -13,7 +14,7 @@ use ScriptFUSION\Mapper\Strategy\CopyKey;
 /**
  * Tests that the key context is correctly propagated through different expression types.
  */
-final class KeyPropagationTest extends \PHPUnit_Framework_TestCase
+final class KeyPropagationTest extends TestCase
 {
     public function testFragmentPropagation()
     {

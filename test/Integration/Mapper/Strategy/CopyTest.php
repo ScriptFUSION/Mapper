@@ -1,10 +1,11 @@
 <?php
 namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Copy;
 
-final class CopyTest extends \PHPUnit_Framework_TestCase
+final class CopyTest extends TestCase
 {
     public function testFixedPath()
     {

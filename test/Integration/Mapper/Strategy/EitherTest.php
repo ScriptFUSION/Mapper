@@ -3,11 +3,12 @@ namespace ScriptFUSIONTest\Integration\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Either;
 use ScriptFUSION\Mapper\Strategy\Strategy;
 
-final class EitherTest extends \PHPUnit_Framework_TestCase
+final class EitherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -17,7 +18,7 @@ final class EitherTest extends \PHPUnit_Framework_TestCase
     /** @var MockInterface */
     private $strategy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->either = (new Either($this->strategy = \Mockery::spy(Strategy::class), 'bar'))->setMapper(new Mapper);
     }

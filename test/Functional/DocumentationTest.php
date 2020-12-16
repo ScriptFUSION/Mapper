@@ -1,6 +1,7 @@
 <?php
 namespace ScriptFUSIONTest\Functional;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\DataType;
 use ScriptFUSION\Mapper\Expression;
 use ScriptFUSION\Mapper\Mapper;
@@ -27,7 +28,7 @@ use ScriptFUSIONTest\Fixture\BarBucketAddressToAddresesMapping;
 use ScriptFUSIONTest\Fixture\FooBookAddressToAddresesMapping;
 use ScriptFUSIONTest\Fixture\FooToBarMapping;
 
-final class DocumentationTest extends \PHPUnit_Framework_TestCase
+final class DocumentationTest extends TestCase
 {
     public function testFooToBarMapping()
     {

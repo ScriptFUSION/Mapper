@@ -1,15 +1,16 @@
 <?php
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Mapper;
 use ScriptFUSION\Mapper\Strategy\Callback;
 use ScriptFUSION\Mapper\Strategy\TryCatch;
 
-final class TryCatchTest extends \PHPUnit_Framework_TestCase
+final class TryCatchTest extends TestCase
 {
     private $callback;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->callback = new Callback(function (array $data) {
             if ($data[0] instanceof \Exception) {
@@ -40,7 +41,7 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
         self::assertSame($data = ['foo'], $tryCatch($data));
         self::assertSame($fallback, $tryCatch([new \DomainException]));
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $tryCatch([new \RuntimeException]);
     }
 
@@ -71,7 +72,7 @@ final class TryCatchTest extends \PHPUnit_Framework_TestCase
         self::assertSame($innerFallback, $tryCatch([new \DomainException]));
         self::assertSame($outerFallback, $tryCatch([new \LogicException]));
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $tryCatch([new \RuntimeException]);
     }
 }

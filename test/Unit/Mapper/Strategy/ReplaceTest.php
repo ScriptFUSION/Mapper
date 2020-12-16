@@ -2,11 +2,12 @@
 namespace ScriptFUSIONTest\Unit\Mapper\Strategy;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use ScriptFUSION\Mapper\Expression;
 use ScriptFUSION\Mapper\Strategy\Replace;
 use ScriptFUSIONTest\MockFactory;
 
-final class ReplaceTest extends \PHPUnit_Framework_TestCase
+final class ReplaceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
