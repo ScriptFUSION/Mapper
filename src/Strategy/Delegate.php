@@ -26,6 +26,6 @@ abstract class Delegate implements Strategy, MapperAware
 
     protected function delegate($strategy, $data, $context, $key = null)
     {
-        return $this->mapper->map($data, $strategy, $context, $key !== null ? $key : $this->key);
+        return $this->mapper->map($data, $strategy, $context, $key ?? $this->key);
     }
 }
