@@ -926,7 +926,7 @@ Debug(Strategy|Mapping|array|mixed $expression)
 Requirements
 ------------
 
- - [PHP 5.6](http://php.net/)
+ - [PHP 8.1](http://php.net/)
  - [Composer](https://getcomposer.org/)
 
 Limitations
@@ -947,10 +947,10 @@ in this document can be found in `DocumentationTest`.
   [Version image]: https://poser.pugx.org/scriptfusion/mapper/version "Latest version"
   [Downloads]: https://packagist.org/packages/scriptfusion/mapper
   [Downloads image]: https://poser.pugx.org/scriptfusion/mapper/downloads "Total downloads"
-  [Build]: http://travis-ci.org/ScriptFUSION/Mapper
-  [Build image]: https://travis-ci.org/ScriptFUSION/Mapper.svg?branch=master "Build status"
-  [Coverage]: https://coveralls.io/github/ScriptFUSION/Mapper
-  [Coverage image]: https://coveralls.io/repos/ScriptFUSION/Mapper/badge.svg "Test coverage"
+  [Build]: https://github.com/ScriptFUSION/Mapper/actions/workflows/Tests.yaml
+  [Build image]: https://github.com/ScriptFUSION/Mapper/actions/workflows/Tests.yaml/badge.svg "Build status"
+  [Coverage]: https://codecov.io/github/ScriptFUSION/Mapper
+  [Coverage image]: https://codecov.io/github/ScriptFUSION/Mapper/graph/badge.svg "Test coverage"
   [Style]: https://styleci.io/repos/59734709
   [Style image]: https://styleci.io/repos/59734709/shield?style=flat "Code style"
 

@@ -44,7 +44,7 @@ class Copy extends Delegate
         // Resolve the path expression. Path will always be an array after this block.
         if (!is_array($path = parent::__invoke($record, $context))) {
             // If it's not an array treat it as a delimited string; implicitly casts other scalar types.
-            $path = explode(self::PATH_SEPARATOR, $path);
+            $path = explode(self::PATH_SEPARATOR, (string)$path);
         }
 
         // Overwrite record with resolved data expression if set and ensure it is an array.

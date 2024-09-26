@@ -26,7 +26,7 @@ final class ToListTest extends TestCase
             ]
         ));
 
-        self::assertSame([$map], $this->toList($map));
+        self::assertSame([$map], $this->toList());
     }
 
     public function testList()
@@ -38,18 +38,18 @@ final class ToListTest extends TestCase
             ]
         ));
 
-        self::assertSame($map, $this->toList($map));
+        self::assertSame($map, $this->toList());
     }
 
     public function testScalar()
     {
         $this->toList->setMapper(MockFactory::mockMapper('foo'));
 
-        $this->toList(['foo']);
+        self::assertSame(['foo'], $this->toList());
     }
 
     private function toList()
     {
-        return call_user_func_array($this->toList, func_get_args());
+        return ($this->toList)([]);
     }
 }

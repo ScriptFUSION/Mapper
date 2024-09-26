@@ -1,12 +1,13 @@
 <phpunit
-    beStrictAboutOutputDuringTests="true"
+  beStrictAboutOutputDuringTests="true"
 >
-    <testsuite>
-        <directory>.</directory>
-    </testsuite>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory>../src</directory>
-        </whitelist>
-    </filter>
+  <testsuite name="default">
+    <directory>.</directory>
+  </testsuite>
+
+  <source>
+    <include>
+      <directory>../src</directory>
+    </include>
+  </source>
 </phpunit>

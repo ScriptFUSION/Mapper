@@ -21,7 +21,7 @@ final class ReplaceTest extends TestCase
         self::assertSame($output, $replace([]));
     }
 
-    public function provideReplacements()
+    public static function provideReplacements()
     {
         return [
             'Single removal' => ['foo', 'o', null, 'f'],

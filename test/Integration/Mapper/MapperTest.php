@@ -53,7 +53,7 @@ final class MapperTest extends TestCase
         self::assertSame($scalar, $mapped);
     }
 
-    public function provideScalars()
+    public static function provideScalars()
     {
         return [
             'string empty' => [''],

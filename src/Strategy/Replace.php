@@ -19,7 +19,7 @@ class Replace extends Delegate
      * Any number of searches and replacements can be specified. Searches and replacements are parsed in pairs. If no
      * replacements are specified, all matches are removed instead of replaced. If fewer replacements than searches are
      * specified, the last replacement will be used for the remaining searches. If more replacements than searches are
-     * specified, the extra replacements are ignored.
+     * specified, the extra replacements will be ignored.
      *
      * @param Strategy|Mapping|array|mixed $expression Expression to search in.
      * @param $searches string|Expression|array Search string(s).
@@ -40,7 +40,7 @@ class Replace extends Delegate
         $replace = null;
 
         foreach ($this->searches as $search) {
-            $replace = count($replacements) ? array_shift($replacements) : $replace;
+            $replace = count($replacements) ? array_shift($replacements) : (string)$replace;
 
             if ($search instanceof Expression) {
                 $output = preg_replace($search, $replace, $output);
