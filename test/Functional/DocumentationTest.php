@@ -18,6 +18,7 @@ use ScriptFUSION\Mapper\Strategy\IfElse;
 use ScriptFUSION\Mapper\Strategy\IfExists;
 use ScriptFUSION\Mapper\Strategy\Join;
 use ScriptFUSION\Mapper\Strategy\Merge;
+use ScriptFUSION\Mapper\Strategy\Regex;
 use ScriptFUSION\Mapper\Strategy\Replace;
 use ScriptFUSION\Mapper\Strategy\TakeFirst;
 use ScriptFUSION\Mapper\Strategy\ToList;
@@ -302,6 +303,21 @@ final class DocumentationTest extends TestCase
                     'bar' => range(3, 5),
                 ],
                 new Merge(new Copy('foo'), new Copy('bar'))
+            )
+        );
+    }
+
+    public function testRegex(): void
+    {
+        self::assertSame(
+            'bar',
+            (new Mapper)->map(
+                ['foo bar baz'],
+                new Regex(
+                    new Copy(0),
+                    '[\h(.+)\h]',
+                    1,
+                )
             )
         );
     }

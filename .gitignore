@@ -2,3 +2,4 @@
 !/.github/
 /vendor/
 /composer.lock
+*.cache

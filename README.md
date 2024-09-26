@@ -37,6 +37,7 @@ Contents
           1. [IfExists](#ifexists)
           1. [Join](#join)
           1. [Merge](#merge)
+          1. [Regex](#regex)
           1. [Replace](#replace)
           1. [TakeFirst](#takefirst)
           1. [ToList](#tolist)
@@ -227,16 +228,8 @@ class BarBucketAddressToAddresesMapping extends Mapping
     {
         return [
             'line1' => new Copy('Addresses->0->1'),
-            'city' => new Callback(
-                function (array $data) {
-                    return $this->extractCity($data['Addresses'][0][2]);
-                }
-            ),
-            'postcode' => new Callback(
-                function (array $data) {
-                    return $this->extractZipCode($data['Addresses'][0][2]);
-                }
-            ),
+            'city' => new Callback(fn (array $data) => $this->extractCity($data['Addresses'][0][2])),
+            'postcode' => new Regex(new Copy('Addresses->0->2'), '[.*\b(\d{5})]', 1),
             'country' => 'US',
         ];
     }
@@ -245,19 +238,12 @@ class BarBucketAddressToAddresesMapping extends Mapping
     {
         return explode(',', $line, 2)[0];
     }
-
-    private function extractZipCode($line)
-    {
-        if (preg_match('[.*\b(\d{5})]', $line, $matches)) {
-            return $matches[1];
-        }
-    }
 }
 ```
 
 *Line1* can be copied straight from the input data and *country* can be hard-coded with a constant value because we assume it does not change.
 
-City and postcode must be extracted from the last line of the address. For this we use `Callback` strategies that indirectly point to private methods of our mapping. Callbacks are only necessary because there are currently no included strategies to perform string splitting or regular expression matching.
+City and postcode must be extracted from the last line of the address. For _city_, we use the `Callback` strategy that points to a private method of our mapping. A callback is necessary because there are currently no included strategies to perform string splitting. For _postcode_, we can use the [`Regex`](#regex) strategy.
 
 The anonymous function wrapper picks the relevant part of the input data to pass to our methods. The weakness of this solution is dereferencing non-existent values will cause PHP to generate *undefined index* notices whereas injecting `Copy` strategies would gracefully resolve to `null` if any part of the path does not exist. Therefore, the most elegant solution would be to create custom strategies to promote code reuse and avoid errors, but is beyond the scope of this demonstration. For more information see [writing strategies](#writing-strategies).
 
@@ -302,6 +288,7 @@ The following strategies ship with Mapper and provide a suite of commonly used f
  - [IfExists](#ifexists) &ndash; Delegates to one expression or another depending on whether the specified condition maps to null.
  - [Join](#join) &ndash; Joins sub-string expressions together with a glue string.
  - [Merge](#merge) &ndash; Merges two data sets together giving precedence to the latter if keys collide.
+ - [Regex](#regex) &ndash; Captures a portion of a string using regular expression matching.
  - [Replace](#replace) &ndash; Replaces one or more substrings.
  - [TakeFirst](#takefirst) &ndash; Takes the first value from a collection one or more times.
  - [ToList](#tolist) &ndash; Converts data to a single-element list unless it is already a list.
@@ -739,6 +726,35 @@ Merge(Strategy|Mapping|array|mixed $first, Strategy|Mapping|array|mixed $second)
 ```
 
 > [1, 2, 3, 3, 4, 5]
+
+### Regex
+
+Captures a portion of a string using regular expression matching.
+
+#### Signature
+
+```php
+Regex(Strategy|Mapping|array|mixed $expression, string $regex, int $capturingGroup = 0)
+```
+
+1. `$expression` &ndash; Expression to search in.
+2. `$regex` &ndash; Regular expression, including delimiters.
+3. `$capturingGroup` &ndash; Optional. Capturing group index to return. Defaults to whole matched expression.
+
+#### Example
+
+```php
+(new Mapper)->map(
+    ['foo bar baz'],
+    new Replace(
+        new Copy(0),
+        '[\h(.+)\h]',
+        1,
+    )
+)
+```
+
+> 'bar'
 
 ### Replace
 

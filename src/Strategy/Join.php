@@ -1,6 +1,8 @@
 <?php
 namespace ScriptFUSION\Mapper\Strategy;
 
+use ScriptFUSION\Mapper\Mapping;
+
 /**
  * Joins sub-string expressions together with a glue string.
  */
@@ -12,7 +14,8 @@ class Join extends Delegate
      * Initializes this instance with the specified glue to join the specified expressions together.
      *
      * @param string $glue Glue.
-     * @param array ...$expressions Expressions to join or a single expression that resolves to an array to join.
+     * @param Strategy|Mapping|string[]|string ...$expressions Expressions to join or a single expression that resolves
+     *     to an array to join.
      */
     public function __construct($glue, ...$expressions)
     {
