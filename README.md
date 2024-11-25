@@ -897,7 +897,7 @@ Type(DataType $type, Strategy $strategy)
 #### Example
 
 ```php
-(new Mapper)->map(['foo' => 123], new Type(DataType::STRING(), new Copy('foo')));
+(new Mapper)->map(['foo' => 123], new Type(DataType::String, new Copy('foo')));
 ```
 
 > '123'

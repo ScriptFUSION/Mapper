@@ -14,7 +14,7 @@ final class TypeTest extends TestCase
 
     public function test()
     {
-        $type = new Type(DataType::INTEGER(), \Mockery::mock(Strategy::class));
+        $type = new Type(DataType::Integer, \Mockery::mock(Strategy::class));
         $type->setMapper(MockFactory::mockMapper('123'));
 
         self::assertSame(123, $type([]));

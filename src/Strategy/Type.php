@@ -30,7 +30,7 @@ class Type extends Decorator
          * "resource". Since the enumeration guarantees valid type specifiers
          * this function call never returns false, so we do not check it.
          */
-        settype($data, "$this->type");
+        settype($data, $this->type->name);
 
         return $data;
     }

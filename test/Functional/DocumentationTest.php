@@ -390,7 +390,7 @@ final class DocumentationTest extends TestCase
     {
         self::assertSame(
             '123',
-            (new Mapper)->map(['foo' => 123], new Type(DataType::STRING(), new Copy('foo')))
+            (new Mapper)->map(['foo' => 123], new Type(DataType::String, new Copy('foo')))
         );
     }
 
