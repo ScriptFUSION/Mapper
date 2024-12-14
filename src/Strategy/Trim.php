@@ -7,6 +7,6 @@ class Trim extends Delegate
 {
     public function __invoke($data, $context = null)
     {
-        return trim(parent::__invoke($data, $context));
+        return trim((string)parent::__invoke($data, $context));
     }
 }

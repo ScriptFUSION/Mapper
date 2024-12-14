@@ -18,4 +18,14 @@ final class TrimTest extends TestCase
 
         self::assertSame('foo', $trim([]));
     }
+
+    /**
+     * Tests that trimming null returns the empty string.
+     */
+    public function testNull(): void
+    {
+        $trim = (new Trim(null))->setMapper(new Mapper());
+
+        self::assertSame('', $trim([]));
+    }
 }
