@@ -22,4 +22,11 @@ final class RegexTest extends TestCase
 
         self::assertNull($regex([]));
     }
+
+    public function testRegexMatchArray(): void
+    {
+        $regex = (new Regex('Alfa Beta Charlie', '[(A\w+).+?(C\w+)]', [1, 2]))->setMapper(MockFactory::mockMapperEcho());
+
+        self::assertSame(['Alfa', 'Charlie'], $regex([]));
+    }
 }
