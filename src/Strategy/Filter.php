@@ -18,7 +18,7 @@ class Filter extends Delegate
      * @param callable|null $callback Callback function that receives the current value as its first argument, the
      *     current key as its second argument and context as its third argument.
      */
-    public function __construct($expression, callable $callback = null)
+    public function __construct($expression, ?callable $callback = null)
     {
         parent::__construct($expression);
 
