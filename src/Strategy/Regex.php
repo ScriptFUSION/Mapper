@@ -18,7 +18,7 @@ final class Regex extends Delegate
 
     public function __invoke($data, $context = null)
     {
-        if (preg_match($this->regex, parent::__invoke($data, $context), $matches)) {
+        if (preg_match($this->regex, parent::__invoke($data, $context) ?? '', $matches)) {
             if (is_array($this->capturingGroup)) {
                 return array_values(array_intersect_key($matches, array_flip($this->capturingGroup)));
             }

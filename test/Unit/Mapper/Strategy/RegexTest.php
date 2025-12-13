@@ -29,4 +29,11 @@ final class RegexTest extends TestCase
 
         self::assertSame(['Alfa', 'Charlie'], $regex([]));
     }
+
+    public function testRegexMatchNullExpression(): void
+    {
+        $regex = (new Regex(null, '[Alfa]'))->setMapper(MockFactory::mockMapperEcho());
+
+        self::assertNull($regex([]));
+    }
 }
